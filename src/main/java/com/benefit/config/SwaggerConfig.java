@@ -24,7 +24,7 @@ public class SwaggerConfig {
                 .select()
                 //apis：扫描包路径，提取API接口
                 //使用什么样的方式来扫描接口，RequestHandlerSelectors下共有五种方法可选。
-                .apis(RequestHandlerSelectors.basePackage("com.df.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.benefit.controller"))
                 //path：扫描接口的路径，PathSelectors下有四种方法，any()是全扫
                 .paths(PathSelectors.any())
                 .build();

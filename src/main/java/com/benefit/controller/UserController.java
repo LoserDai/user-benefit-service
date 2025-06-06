@@ -8,6 +8,8 @@ import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.UserRegisterRequest;
 import com.benefit.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import javax.annotation.Resource;
 @RequestMapping("/user")
 //支持跨域请求后端
 @CrossOrigin(origins = {"http://localhost:3000"})
+@Api(tags = "用户操作入口")
 @Slf4j
 public class UserController {
 
@@ -31,6 +34,7 @@ public class UserController {
 
 
     @PostMapping("/register")
+    @ApiOperation("注册接口")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         //校验
         if (userRegisterRequest == null) {

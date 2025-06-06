@@ -2,6 +2,7 @@ package com.benefit.model.entity;
 
 import lombok.*;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BenefitPoints {
+public class BenefitPoints implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

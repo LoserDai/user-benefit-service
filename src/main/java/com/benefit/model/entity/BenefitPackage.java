@@ -3,6 +3,7 @@ package com.benefit.model.entity;
 import com.benefit.model.enums.Status;
 import lombok.*;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BenefitPackage {
+public class BenefitPackage implements Serializable {
     @Id
     private Long id;
 

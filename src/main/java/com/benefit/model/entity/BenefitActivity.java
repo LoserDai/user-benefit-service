@@ -4,6 +4,7 @@ import com.benefit.model.enums.ActivityStatus;
 import com.benefit.model.enums.ActivityType;
 import lombok.*;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BenefitActivity {
+public class BenefitActivity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

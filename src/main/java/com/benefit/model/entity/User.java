@@ -3,6 +3,7 @@ package com.benefit.model.entity;
 import com.benefit.model.enums.Status;
 import lombok.*;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 /**
@@ -15,19 +16,19 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "userAccount", length = 50, nullable = false)
+    @Column(name = "user_account", length = 50, nullable = false)
     private String userAccount;
 
     @Column(name = "gender")
     private Integer gender;
 
-    @Column(name = "userPassword")
+    @Column(name = "user_password")
     private String userPassword;
 
     @Column(name = "email", length = 100, unique = true)
@@ -41,7 +42,7 @@ public class User {
     private Status status;
 
     //是否为管理员 0 - 普通用户 1 - 管理员
-    @Column(name = "userRole")
+    @Column(name = "user_role")
     private Integer userRole;
 
     @Column(name = "created_by", length = 50)
