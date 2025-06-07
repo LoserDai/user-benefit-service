@@ -227,4 +227,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public List<User> matchUsers(long num, User loginUser) {
         return null;
     }
+
+    @Override
+    public int updateUserById(User user, User loginUser,HttpServletRequest request) {
+        //被修改的用户id
+        Long id = user.getId();
+        if (id <= 0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        user.setUpdateTime(LocalDateTime.now());
+        user.setUpdatedBy(loginUser.getAccount());
+        //逻辑删除
+        user.setStatus(Status.DELETED);
+
+        //只有管理员才能删除 且被删的不是自己
+        if (isAdmin(loginUser) && id != loginUser.getId()) {
+            return userMapper.updateById(user);
+        }else if (isAdmin(loginUser) && id == loginUser.getId()){
+            //自己删除自己，删除后退出登录
+            int deletedId = userMapper.updateById(user);
+            request.getSession().removeAttribute(USER_LOGIN_STATUS);
+            return deletedId;
+        }else {
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+    }
 }

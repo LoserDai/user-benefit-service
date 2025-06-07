@@ -1,5 +1,6 @@
 package com.benefit.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.ResultUtils;
 import com.benefit.exception.BusinessException;
@@ -16,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
 
 
 /**
@@ -97,5 +103,68 @@ public class UserController {
         }
         int result = userService.userLogout(request);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 获取当前用户
+     * @param request
+     * @return
+     */
+    @ApiOperation("获取当前用户接口")
+    @GetMapping("/current")
+    public BaseResponse<User> getCurrentUser(HttpServletRequest request) {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        long userId = currentUser.getId();
+        // TODO 校验用户是否合法
+        User user = userService.getById(userId);
+        User safetyUser = userService.getSafetyUser(user);
+        return ResultUtils.success(safetyUser);
+    }
+
+
+    /**
+     * 查询用户
+     * @param account
+     * @param request
+     * @return
+     */
+    @ApiOperation("查询用户接口")
+    @GetMapping("/search")
+    public BaseResponse<List<User>> searchUsers(String account, HttpServletRequest request) {
+        if (!userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(account)) {
+            queryWrapper.like("account", account);
+        }
+        List<User> userList = userService.list(queryWrapper);
+        List<User> list = userList.stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
+        return ResultUtils.success(list);
+    }
+
+    /**
+     * 删除用户
+     * @param user
+     * @param request
+     * @return
+     */
+    @ApiOperation("删除接口")
+    @PostMapping("/delete")
+    public BaseResponse<Integer> deleteUser(@RequestBody User user, HttpServletRequest request) {
+        if (!userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+        Long id = user.getId();
+        if (id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        int deletedId = userService.updateUserById(user,loginUser,request);
+        return ResultUtils.success(deletedId);
     }
 }

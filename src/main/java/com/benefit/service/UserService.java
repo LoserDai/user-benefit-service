@@ -41,7 +41,7 @@ public interface UserService extends IService<User> {
     User getSafetyUser(User originUser);
 
     /**
-     * 用户注销
+     * 用户登出
      *
      * @param request
      * @return
@@ -92,4 +92,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     List<User> matchUsers(long num, User loginUser);
+
+    int updateUserById(User user,User loginUser,HttpServletRequest request);
 }
