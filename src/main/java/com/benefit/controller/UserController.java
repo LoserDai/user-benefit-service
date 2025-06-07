@@ -1,6 +1,5 @@
 package com.benefit.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.ResultUtils;
 import com.benefit.exception.BusinessException;
@@ -15,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -33,6 +33,11 @@ public class UserController {
     private UserService userService;
 
 
+    /**
+     * 注册
+     * @param userRegisterRequest
+     * @return
+     */
     @PostMapping("/register")
     @ApiOperation("注册接口")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
@@ -48,6 +53,23 @@ public class UserController {
             return null;
         }
         long result = userService.userRegister(userAccount, userPassword, checkPassword);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 更新用户信息
+     * @param user
+     * @param request
+     * @return
+     */
+    @PostMapping("/update")
+    @ApiOperation("修改接口")
+    public BaseResponse<Integer> userUpdate(@RequestBody User user, HttpServletRequest request) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+        User loginUser = userService.getLoginUser(request);
+        int result = userService.updateUser(user, loginUser);
         return ResultUtils.success(result);
     }
 }

@@ -2,6 +2,7 @@ package com.benefit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.benefit.constant.UserConstant;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.UserMapper;
 import com.benefit.model.entity.User;
@@ -20,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
 
 /**
  * @author Allen
@@ -78,6 +81,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUserAccount(userAccount);
         user.setUserPassword(encryptPassword);
         user.setStatus(Status.INACTIVE);
+        user.setCreatedBy("admin");
+        user.setUpdatedBy("admin");
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
         boolean saveResult = this.save(user);
@@ -123,22 +128,66 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public int updateUser(User user, User loginUser) {
-        return 0;
+        //被修改的用户id
+        Long id = user.getId();
+        if (id <= 0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        user.setUpdateTime(LocalDateTime.now());
+        user.setUpdatedBy(loginUser.getUserAccount());
+
+        //如果未激活， 就给激活
+        if(Status.INACTIVE.equals(user.getStatus())){
+            user.setStatus(Status.ACTIVE);
+        }
+        //如果当前登录的是管理员，可以更新任何用户
+        if (isAdmin(loginUser)){
+            return userMapper.updateById(user);
+        }
+        //如果当前登录的不是管理员，只允许更新当前自己的信息
+        if(!isAdmin(loginUser) && id != loginUser.getId()) {
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+        User oldUser = userMapper.selectById(id);
+        if (oldUser == null) {
+            throw new BusinessException(ErrorCode.NULL_ERROR);
+        }
+        return userMapper.updateById(user);
     }
 
     @Override
     public User getLoginUser(HttpServletRequest request) {
-        return null;
+        if(request == null){
+            return null;
+        }
+        Object user = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        if (user == null){
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+        return (User) user;
     }
 
+    /**
+     * 是否为管理员 仅管理员
+     * @param request
+     * @return
+     */
     @Override
     public boolean isAdmin(HttpServletRequest request) {
-        return false;
+        //仅管理员
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        User user = (User) userObj;
+        return user != null && user.getUserRole() == UserConstant.ADMIN_ROLE;
     }
 
+    /**
+     * 是否为管理员
+     * @param loginUser
+     * @return
+     */
     @Override
     public boolean isAdmin(User loginUser) {
-        return false;
+        return loginUser != null && loginUser.getUserRole() == UserConstant.ADMIN_ROLE;
     }
 
     @Override
