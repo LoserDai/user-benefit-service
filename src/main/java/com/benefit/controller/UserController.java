@@ -31,7 +31,7 @@ import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
 @RestController
 @RequestMapping("/user")
 //支持跨域请求后端
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = {"http://localhost:8081"})
 @Api(tags = "用户操作入口")
 @Slf4j
 public class UserController {
@@ -92,6 +92,7 @@ public class UserController {
             return ResultUtils.error(ErrorCode.PARAMS_ERROR);
         }
         User user = userService.userLogin(account, password, request);
+        log.info("user login result:{}", "userName: " + user.getAccount());
         return ResultUtils.success(user);
     }
 

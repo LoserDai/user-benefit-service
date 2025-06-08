@@ -1,5 +1,5 @@
 server:
-  port: 8081  # 自定义后端服务端口
+  port: 8080  # 自定义后端服务端口
 
 spring:
   datasource:
@@ -23,4 +23,4 @@ logging:
   level:
     com.benefit.mapper: debug
 
-# http://localhost:8081/swagger-ui/index.html swagger主页
+# http://localhost:8080/swagger-ui/index.html swagger主页
