@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
@@ -167,5 +168,24 @@ public class UserController {
         User loginUser = userService.getLoginUser(request);
         int deletedId = userService.updateUserById(user,loginUser,request);
         return ResultUtils.success(deletedId);
+    }
+
+    @ApiOperation("查询用户是否已注册")
+    @GetMapping("/isRegister")
+    public BaseResponse<User> isRegister(String account, HttpServletRequest request) {
+        if (!userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(account)) {
+            queryWrapper.like("account", account);
+        }
+        List<User> userList = userService.list(queryWrapper);
+        log.info("用户是{}",userList);
+        if(userList.get(0) == null){
+            //没查到,可以注册
+            return ResultUtils.success(new User());
+        }
+        return ResultUtils.error(ErrorCode.IS_REGISTER);
     }
 }
