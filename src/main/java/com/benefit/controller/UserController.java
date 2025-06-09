@@ -170,7 +170,7 @@ public class UserController {
     }
 
     @ApiOperation("查询用户是否已注册")
-    @GetMapping("/isRegister")
+    @PostMapping("/isRegister")
     public BaseResponse isRegister(String account, HttpServletRequest request) {
         if (!userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
