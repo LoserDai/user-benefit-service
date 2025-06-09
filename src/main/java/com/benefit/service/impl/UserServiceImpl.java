@@ -178,7 +178,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return userMapper.updateById(user);
         }
         //如果当前登录的不是管理员，只允许更新当前自己的信息
-        if(!isAdmin(loginUser) && id != loginUser.getId()) {
+        if(!isAdmin(loginUser) && id.equals(loginUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH);
         }
         User oldUser = userMapper.selectById(id);
@@ -241,9 +241,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setStatus(Status.DELETED);
 
         //只有管理员才能删除 且被删的不是自己
-        if (isAdmin(loginUser) && id != loginUser.getId()) {
+        if (isAdmin(loginUser) && id.equals(loginUser.getId())) {
             return userMapper.updateById(user);
-        }else if (isAdmin(loginUser) && id == loginUser.getId()){
+        }else if (isAdmin(loginUser) && id.equals(loginUser.getId())){
             //自己删除自己，删除后退出登录
             int deletedId = userMapper.updateById(user);
             request.getSession().removeAttribute(USER_LOGIN_STATUS);
