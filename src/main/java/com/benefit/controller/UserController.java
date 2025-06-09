@@ -19,7 +19,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
@@ -172,7 +171,7 @@ public class UserController {
 
     @ApiOperation("查询用户是否已注册")
     @GetMapping("/isRegister")
-    public BaseResponse<User> isRegister(String account, HttpServletRequest request) {
+    public BaseResponse isRegister(String account, HttpServletRequest request) {
         if (!userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
