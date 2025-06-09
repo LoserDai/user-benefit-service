@@ -171,15 +171,14 @@ public class UserController {
 
     @ApiOperation("查询用户是否已注册")
     @PostMapping("/isRegister")
-    public BaseResponse isRegister(String account) {
-        log.info("入参是: {}",account);
+    public BaseResponse isRegister(@RequestBody String account) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(account)) {
             queryWrapper.like("account", account);
         }
         List<User> userList = userService.list(queryWrapper);
         log.info("用户是{}",userList);
-        if(userList.get(0) == null){
+        if(userList == null || userList.isEmpty()) {
             //没查到,可以注册
             return ResultUtils.success(new User());
         }
