@@ -50,11 +50,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isAnyBlank(account, password, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
-        if (account.length() < 4 || account.length() > 16) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号请保持在5-16之间,");
+        if (account.length() < 4 || account.length() > 17) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号请保持在5-17之间");
         }
-        if (password.length() < 8 || checkPassword.length() < 8) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码过短");
+        if (password.length() < 8 || checkPassword.length() < 8 || password.length() > 18 || checkPassword.length() > 18) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码请保持在7-18之间");
         }
         // 账户不能包含特殊字符
         String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
