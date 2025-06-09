@@ -4,7 +4,6 @@ import com.benefit.model.enums.Status;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 /**
  * @author Allen

@@ -43,7 +43,7 @@ public class SwaggerConfig {
                 .title("SpringBoot")
                 .description("Spring Boot整合MongoDB、mybatisPlus、Swagger ")
                 .contact(new Contact("Loser","目标网址","电子邮箱"))
-                .version("v1.1")
+                .version("v1.2")
                 .build();
     }
 }

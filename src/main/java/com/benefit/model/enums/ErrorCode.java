@@ -6,7 +6,7 @@ package com.benefit.model.enums;
 public enum ErrorCode {
 
 
-    SUCCESS(0, "ok", "Request success"),
+    SUCCESS(200, "ok", "Request success"),
     PARAMS_ERROR(40000, "请求参数错误", "Request parameter error"),
     NULL_ERROR(40001, "请求数据为空", "Request data is empty"),
     NOT_LOGIN(40100, "未登录", "Not logged in"),
