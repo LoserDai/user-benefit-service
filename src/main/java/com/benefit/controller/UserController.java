@@ -171,10 +171,8 @@ public class UserController {
 
     @ApiOperation("查询用户是否已注册")
     @PostMapping("/isRegister")
-    public BaseResponse isRegister(String account, HttpServletRequest request) {
-        if (!userService.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
+    public BaseResponse isRegister(String account) {
+        log.info("入参是: {}",account);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(account)) {
             queryWrapper.like("account", account);
