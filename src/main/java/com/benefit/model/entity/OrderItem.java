@@ -12,7 +12,6 @@ import java.io.Serializable;
  */
 @Data
 @Builder
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItem implements Serializable {

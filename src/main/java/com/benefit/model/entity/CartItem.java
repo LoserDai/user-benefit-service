@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
  * 购物车项实体
  */
 @Data
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

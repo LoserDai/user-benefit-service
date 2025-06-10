@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class PointTransaction implements Serializable {
