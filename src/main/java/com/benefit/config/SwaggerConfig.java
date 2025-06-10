@@ -12,7 +12,9 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 /**
- *swagger 配置文件
+ * @author Allen
+ * @date 2025/6/6 14:53
+ * @project swagger配置文件
  */
 @Configuration // 声明配置类
 @EnableOpenApi// 开启swagger

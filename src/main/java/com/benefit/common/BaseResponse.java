@@ -5,7 +5,10 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-
+/**
+ * @author Allen
+ * @date 2025/6/6 14:53
+ */
 @Data
 public class BaseResponse<T> implements Serializable {
 

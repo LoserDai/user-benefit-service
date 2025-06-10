@@ -5,7 +5,7 @@ import com.benefit.model.enums.ErrorCode;
 
 /**
  * 自定义异常类
- *
+ * @author Allen
  */
 public class BusinessException extends RuntimeException {
 

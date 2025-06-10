@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 /**
  * 用户注册请求体
+ * @author feng_dai
  */
 @Data
 public class UserRegisterRequest implements Serializable {

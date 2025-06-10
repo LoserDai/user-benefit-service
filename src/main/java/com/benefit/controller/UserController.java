@@ -177,7 +177,6 @@ public class UserController {
             queryWrapper.like("account", account);
         }
         List<User> userList = userService.list(queryWrapper);
-        log.info("用户是{}",userList);
         if(userList == null || userList.isEmpty()) {
             //没查到,可以注册
             return ResultUtils.success(new User());

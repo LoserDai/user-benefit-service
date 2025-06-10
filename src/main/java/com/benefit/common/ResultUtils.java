@@ -3,8 +3,9 @@ package com.benefit.common;
 import com.benefit.model.enums.ErrorCode;
 
 /**
- * 返回工具类
- *
+ * @author Allen
+ * @date 2025/6/6 14:53
+ * @project 返回工具类
  */
 public class ResultUtils {
 
