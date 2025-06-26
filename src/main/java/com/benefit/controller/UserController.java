@@ -177,7 +177,7 @@ public class UserController {
         List<User> userList = userService.list(queryWrapper);
         if(userList == null || userList.isEmpty()) {
             //没查到,可以注册
-            return ResultUtils.success(new User());
+            return ResultUtils.success(false);
         }
         return ResultUtils.error(ErrorCode.IS_REGISTER);
     }
