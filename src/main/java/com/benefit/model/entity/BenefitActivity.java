@@ -56,8 +56,9 @@ public class BenefitActivity implements Serializable {
     @Column(name = "discount_value", precision = 10, scale = 2)
     private BigDecimal discountValue;
 
+    // 精度10位，小数2位（最大99999999.99）
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
-    private BigDecimal price;  // 精度10位，小数2位（最大99999999.99）
+    private BigDecimal price;
 
     // 最低购买限制（可选）
     @Column(name = "min_purchase")

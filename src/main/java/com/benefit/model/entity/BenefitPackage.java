@@ -41,8 +41,9 @@ public class BenefitPackage implements Serializable {
     @Builder.Default  // 确保Builder模式使用默认值
     private Integer quantity = 0;
 
+    // 精度10位，小数2位（最大99999999.99）
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
-    private BigDecimal price;  // 精度10位，小数2位（最大99999999.99）
+    private BigDecimal price;
 
     // 状态枚举
     @Enumerated(EnumType.STRING)
