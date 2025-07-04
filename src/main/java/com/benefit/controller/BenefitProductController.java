@@ -1,6 +1,5 @@
 package com.benefit.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.PageResult;
 import com.benefit.common.ResultUtils;
@@ -12,7 +11,6 @@ import com.benefit.service.BenefitProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

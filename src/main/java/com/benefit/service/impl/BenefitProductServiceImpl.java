@@ -12,7 +12,6 @@ import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.BenefitProductRequest;
 import com.benefit.service.BenefitProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static net.sf.jsqlparser.parser.feature.Feature.insert;
 
 /**
  * @author Allen
