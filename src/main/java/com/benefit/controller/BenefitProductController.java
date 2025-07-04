@@ -1,5 +1,7 @@
 package com.benefit.controller;
 
+import com.benefit.common.BaseResponse;
+import com.benefit.model.entity.BenefitProduct;
 import com.benefit.service.BenefitProductService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -20,4 +22,9 @@ public class BenefitProductController {
 
     @Resource
     private BenefitProductService benefitProductService;
+
+    public BaseResponse<Integer> insertProduct() {
+
+        return new BaseResponse<>(1, 200);
+    }
 }

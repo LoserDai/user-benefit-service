@@ -4,6 +4,7 @@ import com.benefit.model.enums.Status;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -24,6 +25,9 @@ public class BenefitProduct implements Serializable {
     // 权益产品名称
     @Column(name = "product_name", length = 100, nullable = false, unique = true)
     private String productName;
+
+    @Column(name = "price", precision = 10, scale = 2, nullable = false)
+    private BigDecimal price;  // 精度10位，小数2位（最大99999999.99）
 
     // 状态枚举
     @Enumerated(EnumType.STRING)
