@@ -45,6 +45,9 @@ public class BenefitPackage implements Serializable {
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
     private BigDecimal price;
 
+    @Column(name = "remark",nullable = false)
+    private String remark;
+
     // 状态枚举
     @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)

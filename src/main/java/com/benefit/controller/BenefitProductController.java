@@ -4,6 +4,7 @@ import com.benefit.common.BaseResponse;
 import com.benefit.model.entity.BenefitProduct;
 import com.benefit.service.BenefitProductService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,9 @@ public class BenefitProductController {
     @Resource
     private BenefitProductService benefitProductService;
 
-    public BaseResponse<Integer> insertProduct() {
+    @ApiOperation("新增产品接口")
+    @RequestMapping("/insertProduct")
+    public BaseResponse<Integer> insertProduct(BenefitProduct product) {
 
         return new BaseResponse<>(1, 200);
     }

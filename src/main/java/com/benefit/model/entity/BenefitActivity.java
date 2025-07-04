@@ -60,6 +60,9 @@ public class BenefitActivity implements Serializable {
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
     private BigDecimal price;
 
+    @Column(name = "remark",nullable = false)
+    private String remark;
+
     // 最低购买限制（可选）
     @Column(name = "min_purchase")
     private Integer minPurchase;
