@@ -9,6 +9,7 @@ import com.benefit.exception.BusinessException;
 import com.benefit.mapper.BenefitProductMapper;
 import com.benefit.model.entity.BenefitProduct;
 import com.benefit.model.enums.ErrorCode;
+import com.benefit.model.enums.Status;
 import com.benefit.request.BenefitProductRequest;
 import com.benefit.service.BenefitProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -106,6 +107,19 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
                 (int) resultPage.getCurrent(),
                 (int) resultPage.getSize(),
                 (int) resultPage.getPages());
+    }
+
+    @Override
+    public int deleteProduct(String productId) {
+        BenefitProduct product = productMapper.selectById(productId);
+        if (ObjectUtils.isNull(product) || product.getStatus() == Status.DELETED ){
+            log.info("This product is not allow to modify or does not exist  ");
+            return 0;
+        }else {
+            product.setStatus(Status.DELETED);
+        }
+        log.info("status: {}",product.getStatus());
+        return productMapper.updateById(product);
     }
 
     private QueryWrapper<BenefitProduct> buildQueryWrapper(BenefitProductRequest request) {

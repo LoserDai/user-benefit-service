@@ -16,4 +16,6 @@ public interface BenefitProductService extends IService<BenefitProduct> {
     Boolean isExistProduct(BenefitProductRequest productRequest);
 
     PageResult<BenefitProduct> queryAllProduct(BenefitProductRequest request);
+
+    int deleteProduct(String productId);
 }

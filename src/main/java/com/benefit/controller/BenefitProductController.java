@@ -11,6 +11,7 @@ import com.benefit.service.BenefitProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -46,7 +47,6 @@ public class BenefitProductController {
     @PostMapping("/queryAllProduct")
     public BaseResponse<PageResult<BenefitProduct>> queryAllProduct(@RequestBody(required = false) BenefitProductRequest request) {
 
-
         // 参数校验
         if (request != null) {
             if (request.getPageNum() != null && request.getPageNum() < 1) {
@@ -58,5 +58,20 @@ public class BenefitProductController {
         }
         PageResult<BenefitProduct> result = benefitProductService.queryAllProduct(request);
         return ResultUtils.success(result);
+    }
+
+
+    @ApiOperation("下架产品接口")
+    @PostMapping("/deleteProduct")
+    public BaseResponse deleteProduct(@RequestParam String productId){
+
+        if (StringUtils.isBlank(productId)){
+            return new BaseResponse(ErrorCode.PARAMS_ERROR);
+        }
+        int count = benefitProductService.deleteProduct(productId);
+        if (count<=0){
+            return ResultUtils.error(ErrorCode.SYSTEM_ERROR);
+        }
+            return ResultUtils.success(count);
     }
 }
