@@ -18,4 +18,6 @@ public interface BenefitProductService extends IService<BenefitProduct> {
     PageResult<BenefitProduct> queryAllProduct(BenefitProductRequest request);
 
     int deleteProduct(String productId);
+
+    BenefitProduct updateProduct(BenefitProduct product);
 }

@@ -122,6 +122,22 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
         return productMapper.updateById(product);
     }
 
+    @Override
+    public BenefitProduct updateProduct(BenefitProduct product) {
+        BenefitProduct existingProduct = productMapper.selectById(product.getId());
+         if (ObjectUtils.isNull(existingProduct)){
+             log.info("Not exist this product!");
+             return null;
+         }
+         product.setUpdateTime(LocalDateTime.now());
+        int row = productMapper.updateById(product);
+         if (row <= 0){
+             log.info("update product failed!");
+             return null;
+         }
+            return product;
+    }
+
     private QueryWrapper<BenefitProduct> buildQueryWrapper(BenefitProductRequest request) {
         QueryWrapper<BenefitProduct> queryWrapper = new QueryWrapper<>();
 

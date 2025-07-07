@@ -11,6 +11,7 @@ import com.benefit.service.BenefitProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,5 +74,21 @@ public class BenefitProductController {
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR);
         }
             return ResultUtils.success(count);
+    }
+
+    @ApiOperation("编辑产品接口")
+    @PostMapping("/updateProduct")
+    public BaseResponse updateProduct(@RequestBody BenefitProduct product){
+        if (StringUtils.isBlank(product.getId().toString())){
+            return new BaseResponse(ErrorCode.PARAMS_ERROR);
+        }
+        BenefitProduct isExist = benefitProductService.getById(product.getId());
+        if (ObjectUtils.isEmpty(isExist)){
+            log.info("product is not exist!");
+            return new BaseResponse(ErrorCode.PARAMS_ERROR);
+        }
+        product = benefitProductService.updateProduct(product);
+
+        return ResultUtils.success(product);
     }
 }
