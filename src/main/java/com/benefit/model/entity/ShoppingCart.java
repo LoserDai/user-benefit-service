@@ -11,7 +11,8 @@ import java.util.List;
  * 购物车表
  */
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ShoppingCart implements Serializable {
 
     private Long userId;

@@ -53,6 +53,7 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
             product.setUpdateTime(LocalDateTime.now());
 
         try {
+            log.info("before insert: id = {}", product.getId());
             Integer insert = productMapper.insert(product);
             if (insert == 0){
                 throw new BusinessException(ErrorCode.PARAMS_ERROR,"create fail");

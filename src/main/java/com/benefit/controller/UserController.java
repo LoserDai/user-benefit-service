@@ -45,7 +45,7 @@ public class UserController {
      */
     @PostMapping("/register")
     @ApiOperation("注册接口")
-    public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public BaseResponse<User> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         //校验
         if (userRegisterRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -54,11 +54,11 @@ public class UserController {
         String account = userRegisterRequest.getAccount();
         String password = userRegisterRequest.getPassword();
         String checkPassword = userRegisterRequest.getCheckPassword();
-        if (StringUtils.isAnyBlank(password, password, checkPassword)) {
+        if (StringUtils.isAnyBlank(account, password, checkPassword)) {
             return null;
         }
-        long result = userService.userRegister(account, password, checkPassword);
-        return ResultUtils.success(result);
+        User user = userService.userRegister(account, password, checkPassword);
+        return ResultUtils.success(user);
     }
 
     /**

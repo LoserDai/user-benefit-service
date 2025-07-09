@@ -1,6 +1,9 @@
 package com.benefit.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
@@ -10,8 +13,6 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @Author feng.dai
  * @Date 2023/3/2 13:42
- * @Project_Name mybatisPlus
- * @Package_Name com.df.config
  */
 @Configuration
 public class MybatisPlusConfig {
@@ -24,6 +25,24 @@ public class MybatisPlusConfig {
         // 指定数据库方言为 MYSQL
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
+    }
+
+    @Bean
+    public ConfigurationCustomizer mybatisConfigurationCustomizer() {
+        return configuration -> {
+            // 避免数据库字段和 Java 字段不匹配
+            configuration.setMapUnderscoreToCamelCase(true);
+        };
+    }
+
+    @Bean
+    public GlobalConfig globalConfig() {
+        GlobalConfig globalConfig = new GlobalConfig();
+        GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig();
+        // 重点：设置主键策略为数据库自增
+        dbConfig.setIdType(IdType.AUTO);
+        globalConfig.setDbConfig(dbConfig);
+        return globalConfig;
     }
 
     /**

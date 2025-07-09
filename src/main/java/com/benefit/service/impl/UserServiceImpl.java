@@ -45,7 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
-    public long userRegister(String account, String password, String checkPassword) {
+    public User userRegister(String account, String password, String checkPassword) {
         // 1. 校验
         if (StringUtils.isAnyBlank(account, password, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -60,11 +60,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
         Matcher matcher = Pattern.compile(validPattern).matcher(account);
         if (matcher.find()) {
-            return -1;
+            return null;
         }
         // 密码和校验密码相同
         if (!password.equals(checkPassword)) {
-            return -1;
+            return null;
         }
         // 账户不能重复
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -80,15 +80,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setAccount(account);
         user.setPassword(encryptPassword);
         user.setStatus(Status.INACTIVE);
-        user.setCreatedBy("admin");
-        user.setUpdatedBy("admin");
+        user.setCreatedBy("SYSTEM");
+        user.setUpdatedBy("SYSTEM");
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
         boolean saveResult = this.save(user);
         if (!saveResult) {
-            return -1;
+            return null;
         }
-        return user.getId();
+        return user;
     }
 
     @Override
