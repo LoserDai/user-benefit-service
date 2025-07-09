@@ -1,7 +1,7 @@
 package com.benefit.constant;
 
 /**
- * @author feng_dai
+ * @author Allen
  * @create 2025-06-07-13:12
  */
 public interface UserConstant {

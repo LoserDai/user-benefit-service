@@ -85,7 +85,7 @@ public class BenefitProductController {
         BenefitProduct isExist = benefitProductService.getById(product.getId());
         if (ObjectUtils.isEmpty(isExist)){
             log.info("product is not exist!");
-            return new BaseResponse(ErrorCode.PARAMS_ERROR);
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
         }
         product = benefitProductService.updateProduct(product);
 
