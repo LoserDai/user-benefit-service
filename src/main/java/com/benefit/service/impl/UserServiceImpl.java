@@ -145,6 +145,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         safetyUser.setGender(originUser.getGender());
         safetyUser.setPhone(originUser.getPhone());
         safetyUser.setEmail(originUser.getEmail());
+        safetyUser.setStatus(originUser.getStatus());
         safetyUser.setUserRole(originUser.getUserRole());
         safetyUser.setCreateTime(originUser.getCreateTime());
         safetyUser.setUpdateTime(originUser.getUpdateTime());
@@ -184,7 +185,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return userMapper.updateById(user);
         }
         //如果当前登录的不是管理员，只允许更新当前自己的信息
-        if(!isAdmin(loginUser) && id.equals(loginUser.getId())) {
+        if(!isAdmin(loginUser) && !id.equals(loginUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH);
         }
         User oldUser = userMapper.selectById(id);

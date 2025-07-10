@@ -171,15 +171,15 @@ public class UserController {
         return ResultUtils.success(deletedId);
     }
 
-    @ApiOperation("查询用户是否已注册")
+    @ApiOperation("查询用户名是否已注册")
     @GetMapping("/isRegister")
     public BaseResponse isRegister(@RequestParam String account) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(account)) {
-            queryWrapper.like("account", account);
+            queryWrapper.eq("account", account);
         }
-        List<User> userList = userService.list(queryWrapper);
-        if(userList == null || userList.isEmpty()) {
+        User user = userService.getOne(queryWrapper);
+        if(user == null) {
             //没查到,可以注册
             return ResultUtils.success(false);
         }
