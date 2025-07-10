@@ -168,8 +168,8 @@ public class UserController {
     }
 
     @ApiOperation("查询用户是否已注册")
-    @PostMapping("/isRegister")
-    public BaseResponse isRegister(@RequestBody String account) {
+    @GetMapping("/isRegister")
+    public BaseResponse isRegister(@RequestParam String account) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(account)) {
             queryWrapper.like("account", account);
