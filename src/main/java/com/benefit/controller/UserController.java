@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -90,7 +91,10 @@ public class UserController {
             return ResultUtils.error(ErrorCode.PARAMS_ERROR);
         }
         User user = userService.userLogin(account, password, request);
-        log.info("user login result:{}", "userName: " + user.getAccount());
+        log.info("user login result:{}", "userName: " + user);
+        if (ObjectUtils.isEmpty(user)){
+            return ResultUtils.error(ErrorCode.NOT_ALLOWED_LOGIN);
+        }
         return ResultUtils.success(user);
     }
 

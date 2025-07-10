@@ -13,6 +13,8 @@ public enum ErrorCode {
     NO_AUTH(40101, "无权限", "No permission"),
     FORBIDDEN(40301, "禁止操作", "Prohibited operation"),
     IS_REGISTER(40002,"该用户已注册","This user has been registered"),
+
+    NOT_ALLOWED_LOGIN(40003,"该用户已注销/已失效","This user has been deleted or expired"),
     SYSTEM_ERROR(50000, "系统内部异常", "System internal exception");
 
 
