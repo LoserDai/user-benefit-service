@@ -3,6 +3,7 @@ package com.benefit.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.ResultUtils;
+import com.benefit.exception.BusinessException;
 import com.benefit.model.entity.SwapConfig;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.service.SwapConfigService;
@@ -14,6 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Allen
@@ -55,5 +59,38 @@ public class SwapConfigController {
 
         // 3. 返回配置信息
         return ResultUtils.success(config);
+    }
+
+
+    @PostMapping("/saveConfig")
+    @ApiOperation("配置兑换费率接口")
+    public BaseResponse saveConfigById(@RequestBody SwapConfig config) {
+        if (ObjectUtils.isEmpty(config)){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
+        }
+
+        Set<String> validCcy = new HashSet<>(Arrays.asList("B/P", "P/B"));
+        if (!validCcy.contains(config.getCcy())) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"please input ccy = 'B/P' or 'P/B' ");
+        }
+        //判断该配置是否已存在,如果已存在那就修改
+        SwapConfig one = swapConfigService.getOne(new QueryWrapper<SwapConfig>()
+                .eq("user_id", config.getUserId())
+                .eq("ccy", config.getCcy()));
+
+        boolean isSave = false;
+        if (ObjectUtils.isNotEmpty(one)){
+            //已存在
+            isSave = swapConfigService.update(config,new QueryWrapper<SwapConfig>()
+                    .eq("user_id", config.getUserId())
+                    .eq("ccy", config.getCcy()));
+        }else {
+            //不存在
+            isSave = swapConfigService.save(config);
+            if (!isSave){
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR,"Save config fail!");
+            }
+        }
+        return ResultUtils.success(isSave);
     }
 }
