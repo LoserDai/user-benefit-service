@@ -20,7 +20,7 @@ public class BenefitPoints implements Serializable {
     private Long id;
 
     // 关联用户实体
-    private User user;
+    private Long userId;
 
     // 积分数量，默认值0
     private Integer points = 0;
