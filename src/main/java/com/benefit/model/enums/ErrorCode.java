@@ -15,7 +15,10 @@ public enum ErrorCode {
     IS_REGISTER(40002,"该用户已注册","This user has been registered"),
 
     NOT_ALLOWED_LOGIN(40003,"该用户已注销/已失效","This user has been deleted or expired"),
-    SYSTEM_ERROR(50000, "系统内部异常", "System internal exception");
+    SYSTEM_ERROR(50000, "系统内部异常", "System internal exception"),
+    ACCOUNT_NOT_FOUND(40004, "账户不存在", "account is not exist!"),
+    INSUFFICIENT_POINTS(40005, "积分不足","points is not enough" ),
+    INSUFFICIENT_BALANCE(40006, "余额不足", "Balance is not enough");
 
 
 
