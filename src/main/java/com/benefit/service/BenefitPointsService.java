@@ -8,4 +8,5 @@ import com.benefit.model.entity.BenefitPoints;
  * @date 2025/7/4 10:59
  */
 public interface BenefitPointsService extends IService<BenefitPoints> {
+    Integer rechargeById(BenefitPoints benefitPoints);
 }

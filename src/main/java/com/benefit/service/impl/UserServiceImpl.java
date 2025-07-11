@@ -2,9 +2,12 @@ package com.benefit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.benefit.common.ResultUtils;
 import com.benefit.constant.UserConstant;
 import com.benefit.exception.BusinessException;
+import com.benefit.mapper.BenefitPointsMapper;
 import com.benefit.mapper.UserMapper;
+import com.benefit.model.entity.BenefitPoints;
 import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.Status;
@@ -34,6 +37,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private BenefitPointsMapper pointsMapper;
 
     //盐值
     private static final String SALT = "Allen";
@@ -88,6 +94,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         boolean saveResult = this.save(user);
         if (!saveResult) {
             return null;
+        }
+        //注册后给他创建账户
+        BenefitPoints points = new BenefitPoints();
+        points.setUserId(user.getId());
+        int insert = pointsMapper.insert(points);
+        if (insert <= 0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         return user;
     }
