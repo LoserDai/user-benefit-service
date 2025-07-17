@@ -5,7 +5,6 @@ import com.benefit.common.BaseResponse;
 import com.benefit.common.ResultUtils;
 import com.benefit.exception.BusinessException;
 import com.benefit.model.entity.BenefitPoints;
-import com.benefit.model.entity.SwapConfig;
 import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.BenefitPointsRequest;

@@ -2,7 +2,6 @@ package com.benefit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.benefit.common.ResultUtils;
 import com.benefit.constant.UserConstant;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.BenefitPointsMapper;
