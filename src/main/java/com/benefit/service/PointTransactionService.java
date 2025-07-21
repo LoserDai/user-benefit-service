@@ -8,4 +8,5 @@ import com.benefit.model.entity.PointTransaction;
  * @date 2025/7/18 17:01
  */
 public interface PointTransactionService extends IService<PointTransaction> {
+    Integer savePointTrans(PointTransaction pointTransaction);
 }
