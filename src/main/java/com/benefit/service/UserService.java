@@ -5,6 +5,8 @@ import com.benefit.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Allen
@@ -94,4 +96,6 @@ public interface UserService extends IService<User> {
     List<User> matchUsers(long num, User loginUser);
 
     int updateUserById(User user,User loginUser,HttpServletRequest request);
+
+    Map<Long, String> getUserAccountMap(Set<Long> userIds);
 }

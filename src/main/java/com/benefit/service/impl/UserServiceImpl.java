@@ -20,7 +20,10 @@ import org.springframework.util.ObjectUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -270,5 +273,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }else {
             throw new BusinessException(ErrorCode.NO_AUTH);
         }
+    }
+
+    /**
+     * 根据Id查询对应的account
+     * @param userIds
+     * @return
+     */
+    @Override
+    public Map<Long, String> getUserAccountMap(Set<Long> userIds) {
+
+        Map<Long, String> map = new HashMap<>();
+        userIds.forEach(useId -> {
+            User user = userMapper.selectOne(new QueryWrapper<User>().eq("id", useId));
+            if(ObjectUtils.isEmpty(user)){
+                throw new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND);
+            }
+            map.put(user.getId(),user.getAccount());
+        });
+        return map;
     }
 }
