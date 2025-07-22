@@ -38,7 +38,7 @@ public class BenefitPointsController {
 
     @PostMapping("/query")
     @ApiOperation("查询接口")
-    public BaseResponse queryPointsById(HttpServletRequest request){
+    public BaseResponse<BenefitPoints> queryPointsById(HttpServletRequest request){
 
         User loginUser = userService.getLoginUser(request);
         if (ObjectUtils.isEmpty(loginUser)){
@@ -56,7 +56,7 @@ public class BenefitPointsController {
 
     @PostMapping("/modifyBalance")
     @ApiOperation("调账")
-    public BaseResponse modifyBalance(@RequestBody BenefitPointsRequest request){
+    public BaseResponse<Integer> modifyBalance(@RequestBody BenefitPointsRequest request){
 
         Long userId = request.getUserId();
         if (userId <0){

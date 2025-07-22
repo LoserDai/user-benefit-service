@@ -37,7 +37,7 @@ public class SwapConfigController {
 
     @GetMapping("/getConfig")
     @ApiOperation("获取兑换配置接口")
-    public BaseResponse getConfigById(
+    public BaseResponse<SwapConfig> getConfigById(
             @RequestParam String userId,
             @RequestParam String ccy) {
 
@@ -64,7 +64,7 @@ public class SwapConfigController {
 
     @PostMapping("/saveConfig")
     @ApiOperation("配置兑换费率接口")
-    public BaseResponse saveConfigById(@RequestBody SwapConfig config) {
+    public BaseResponse<Boolean> saveConfigById(@RequestBody SwapConfig config) {
         if (ObjectUtils.isEmpty(config)){
             return ResultUtils.error(ErrorCode.PARAMS_ERROR);
         }

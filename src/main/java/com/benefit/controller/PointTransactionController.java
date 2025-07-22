@@ -39,7 +39,7 @@ public class PointTransactionController {
 
     @PostMapping("/savePointTrans")
     @ApiOperation("保存交易流水")
-    public BaseResponse savePointTrans(@RequestBody PointTransaction pointTransaction){
+    public BaseResponse<Integer> savePointTrans(@RequestBody PointTransaction pointTransaction){
         if (pointTransaction.getUserId() == null || pointTransaction.getUserId() <= 0){
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"userId not exist!");
         }
