@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class PageResult<T> {
     @ApiModelProperty("数据列表")
-    private List<T> list;
+    private T data;
 
     @ApiModelProperty("总记录数")
     private Long total;
@@ -23,16 +23,20 @@ public class PageResult<T> {
     @ApiModelProperty("每页数量")
     private Integer pageSize;
 
-    @ApiModelProperty("总页数")
-    private Integer pages;
+
 
     public PageResult() {}
 
-    public PageResult(List<T> list, Long total, Integer pageNum, Integer pageSize, Integer pages) {
-        this.list = list;
+    public PageResult(List<T> data, Long total, Integer pageNum, Integer pageSize) {
+        this.data = (T) data;
         this.total = total;
         this.pageNum = pageNum;
         this.pageSize = pageSize;
-        this.pages = pages;
     }
+
+    // 计算信息增强
+    public boolean isFirstPage() {
+        return pageNum == 1;
+    }
+
 }

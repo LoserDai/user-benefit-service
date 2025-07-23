@@ -94,8 +94,7 @@ public class PointTransactionServiceImpl extends ServiceImpl<PointTransactionMap
                     Collections.emptyList(),
                     resultPage.getTotal(),
                     pageNum,
-                    pageSize,
-                    (int) resultPage.getPages()
+                    pageSize
             );
         }
 
@@ -140,8 +139,7 @@ public class PointTransactionServiceImpl extends ServiceImpl<PointTransactionMap
         return new PageResult<>(
                 vos,
                 resultPage.getTotal(),
-                pageNum, pageSize,
-                (int) resultPage.getPages()
+                pageNum, pageSize
         );
     }
 

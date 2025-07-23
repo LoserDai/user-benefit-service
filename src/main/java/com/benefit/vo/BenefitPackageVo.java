@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 public class BenefitPackageVo implements Serializable {
 
     private static final long serialVersionUID = 3191241716373120793L;
+    @ApiModelProperty("权益包ID")
+    private Long id;
 
     @ApiModelProperty("权益包")
     private String packageName;

@@ -106,8 +106,7 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
         return new PageResult<>(records,
                 resultPage.getTotal(),
                 (int) resultPage.getCurrent(),
-                (int) resultPage.getSize(),
-                (int) resultPage.getPages());
+                (int) resultPage.getSize());
     }
 
     @Override
