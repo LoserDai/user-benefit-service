@@ -28,8 +28,11 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
     private BenefitPointsMapper benefitPointsMapper;
 
 
-
-
+    /**
+     * 调账
+     * @param request
+     * @return
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int modifyBalance(BenefitPointsRequest request) {

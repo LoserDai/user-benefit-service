@@ -107,6 +107,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return user;
     }
 
+    /**
+     * 用户登录
+     * @param account  用户账户
+     * @param password 用户密码
+     * @param request
+     * @return
+     */
     @Override
     public User userLogin(String account, String password, HttpServletRequest request) {
         // 1. 校验
@@ -149,6 +156,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return safetyUser;
     }
 
+    /**
+     * 用户脱敏
+     * @param originUser
+     * @return
+     */
     @Override
     public User getSafetyUser(User originUser) {
         if (originUser == null) {
@@ -176,11 +188,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return 1;
     }
 
+    /**
+     * 根据标签搜索用户
+     * @param tagNameList
+     * @return
+     */
     @Override
     public List<User> searchUsersByTags(List<String> tagNameList) {
         return null;
     }
 
+    /**
+     * 更新用户信息/激活用户
+     * @param user
+     * @param loginUser
+     * @return
+     */
     @Override
     public int updateUser(User user, User loginUser) {
         //被修改的用户id
@@ -210,6 +233,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return userMapper.updateById(user);
     }
 
+    /**
+     * 获取当前登录的用户
+     * @param request
+     * @return
+     */
     @Override
     public User getLoginUser(HttpServletRequest request) {
         if(request == null){
@@ -245,11 +273,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return loginUser != null && loginUser.getUserRole() == UserConstant.ADMIN_ROLE;
     }
 
+    /**
+     * 匹配用户
+     * @param num
+     * @param loginUser
+     * @return
+     */
     @Override
     public List<User> matchUsers(long num, User loginUser) {
         return null;
     }
 
+    /**
+     * 根据ID修改用户
+     * @param user
+     * @param loginUser
+     * @param request
+     * @return
+     */
     @Override
     public int updateUserById(User user, User loginUser,HttpServletRequest request) {
         //被修改的用户id

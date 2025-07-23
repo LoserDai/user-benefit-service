@@ -45,6 +45,11 @@ public class PointTransactionServiceImpl extends ServiceImpl<PointTransactionMap
     @Resource
     private UserService userService;
 
+    /**
+     * 保存交易流水
+     * @param pointTransaction
+     * @return
+     */
     @Transactional
     @Override
     public Integer savePointTrans(PointTransaction pointTransaction) {
@@ -69,6 +74,11 @@ public class PointTransactionServiceImpl extends ServiceImpl<PointTransactionMap
         return count;
     }
 
+    /**
+     * 分页查询交易流水
+     * @param request
+     * @return
+     */
     @Override
     public PageResult<PointTransactionVo> queryAllPointTransaction(PointTransactionRequest request) {
         // 1. 初始化分页参数
@@ -143,6 +153,11 @@ public class PointTransactionServiceImpl extends ServiceImpl<PointTransactionMap
         );
     }
 
+    /**
+     * 组装查询条件
+     * @param request
+     * @return
+     */
     private QueryWrapper<PointTransaction> buildQueryWrapper(PointTransactionRequest request){
         QueryWrapper<PointTransaction> wrapper = new QueryWrapper<>();
 

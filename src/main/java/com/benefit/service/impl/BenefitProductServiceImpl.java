@@ -81,6 +81,11 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
         return true;
     }
 
+    /**
+     * 分页查询所有产品
+     * @param request
+     * @return
+     */
     @Override
     public PageResult<BenefitProduct> queryAllProduct(BenefitProductRequest request) {
 
