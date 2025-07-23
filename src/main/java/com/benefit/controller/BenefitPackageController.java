@@ -3,6 +3,7 @@ package com.benefit.controller;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.PageResult;
 import com.benefit.common.ResultUtils;
+import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.BenefitPackageRequest;
 import com.benefit.service.BenefitPackageService;
 import com.benefit.vo.BenefitPackageVo;
@@ -44,8 +45,22 @@ public class BenefitPackageController {
     @ApiOperation("新建权益包")
     public BaseResponse<Integer> savePackage (@RequestBody BenefitPackageRequest request){
 
-        //创建权益包: 权益产品只能是已激活的
+        if (request == null){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"request param is null");
+        }
 
-        return null;
+        if (request.getPackageName() == null || request.getPackageName().isEmpty()){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"No products specified");
+        }
+
+        if (request.getQuantity() == null || request.getQuantity() < 0){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"Quantity must great than 0!");
+        }
+
+        int count = benefitPackageService.savePackage(request);
+        if (count < 0){
+            return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"Save package failed!");
+        }
+        return ResultUtils.success(count);
     }
 }

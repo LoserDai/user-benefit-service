@@ -33,6 +33,9 @@ public class BenefitPackageVo implements Serializable {
     @ApiModelProperty("状态")
     private Status status;
 
+    @ApiModelProperty("备注")
+    private String remark;
+
     @ApiModelProperty("库存")
     private Integer quantity;
 

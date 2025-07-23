@@ -34,6 +34,9 @@ public class BenefitPackageRequest extends PageBaseRequest implements Serializab
     @ApiModelProperty("价格")
     private BigDecimal price;
 
+    @ApiModelProperty("备注")
+    private String remark;
+
     @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
 

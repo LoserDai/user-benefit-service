@@ -13,4 +13,6 @@ import com.benefit.vo.BenefitPackageVo;
  */
 public interface BenefitPackageService  extends IService<BenefitPackage> {
     PageResult<BenefitPackageVo> queryPackage(BenefitPackageRequest request);
+
+    int savePackage(BenefitPackageRequest request);
 }

@@ -21,6 +21,7 @@
         t1.status,
         t1.quantity,
         t1.price,
+        t1.remark,
         t1.create_time
         FROM benefit_package t1
         LEFT JOIN package_product_rel t2 ON t1.id = t2.package_id
@@ -48,6 +49,10 @@
 
             <if test="request.price != null">
                 AND t1.price = #{request.price}
+            </if>
+
+            <if test="request.remark != null">
+                AND t1.remark = #{request.remark}
             </if>
 
             <if test="request.createTime != null">
