@@ -38,4 +38,14 @@ public class BenefitPackageController {
 
         return ResultUtils.success(pageResult);
     }
+
+
+    @PostMapping("/savePackage")
+    @ApiOperation("新建权益包")
+    public BaseResponse<Integer> savePackage (@RequestBody BenefitPackageRequest request){
+
+        //创建权益包: 权益产品只能是已激活的
+
+        return null;
+    }
 }

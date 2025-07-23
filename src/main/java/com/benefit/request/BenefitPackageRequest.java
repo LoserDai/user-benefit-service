@@ -7,6 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Allen
@@ -22,7 +23,7 @@ public class BenefitPackageRequest extends PageBaseRequest implements Serializab
     private String packageName;
 
     @ApiModelProperty("权益产品")
-    private String productName;
+    private List<String> productNames;
 
     @ApiModelProperty("状态")
     private Status status;

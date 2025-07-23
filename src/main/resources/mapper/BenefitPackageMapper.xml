@@ -30,8 +30,12 @@
                 AND t1.package_name LIKE CONCAT('%', #{request.packageName}, '%')
             </if>
 
-            <if test="request.productName != null and request.productName != ''">
-                AND t3.product_name LIKE CONCAT('%', #{request.productName}, '%')
+            <if test="request.productNames != null and request.productNames.size() >= 0">
+                AND (
+                <foreach collection="request.productNames" item="name" separator="OR">
+                    t3.product_name LIKE CONCAT('%', #{name}, '%')
+                </foreach>
+                )
             </if>
 
             <if test="request.status != null">

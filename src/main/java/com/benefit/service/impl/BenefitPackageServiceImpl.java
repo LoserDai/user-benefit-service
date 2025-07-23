@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Allen
@@ -33,6 +34,14 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
      */
     @Override
     public PageResult<BenefitPackageVo> queryPackage(BenefitPackageRequest request) {
+
+        // 预处理参数：过滤 productNames 中的空字符串
+        if (request != null && request.getProductNames() != null) {
+            List<String> filteredNames = request.getProductNames().stream()
+                    .filter(name -> name != null && !name.trim().isEmpty())
+                    .collect(Collectors.toList());
+            request.setProductNames(filteredNames);
+        }
 
         int pageNum = Optional.ofNullable(request)
                 .map(BenefitPackageRequest::getPageNum)
