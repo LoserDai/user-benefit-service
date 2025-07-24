@@ -111,7 +111,7 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
         Long isExist = benefitPackageMapper.selectCount(new QueryWrapper<BenefitPackage>().eq("package_name", request.getPackageName()));
         if (isExist > 0){
             log.info("This package_name is exist!");
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"This package_name is exist!");
         }
 
         // 插入权益包
