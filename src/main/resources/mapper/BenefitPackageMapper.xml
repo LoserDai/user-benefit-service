@@ -14,6 +14,7 @@
     </resultMap>
 
     <select id="selectPackageList" resultMap="BenefitPackageVoMap">
+        select * from (
         SELECT
         t1.id,
         t1.package_name,
@@ -60,5 +61,6 @@
             </if>
         </where>
         ORDER BY t1.create_time DESC
+        ) tmp
     </select>
 </mapper>

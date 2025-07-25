@@ -76,7 +76,6 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
 
         List<BenefitPackageVo> list = benefitPackageMapper.selectPackageList(page, request);
 
-        // 返回分页结果，封装分页信息
         return new PageResult<>(
                 list,
                 page.getTotal(),
