@@ -1,16 +1,17 @@
 package com.benefit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.benefit.common.PageResult;
-import com.benefit.common.ResultUtils;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.BenefitPackageMapper;
 import com.benefit.mapper.BenefitProductMapper;
 import com.benefit.mapper.PackageProductRelMapper;
 import com.benefit.model.entity.BenefitPackage;
 import com.benefit.model.entity.BenefitProduct;
+import com.benefit.model.entity.PackageProductRel;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.Status;
 import com.benefit.request.BenefitPackageRequest;
@@ -19,7 +20,6 @@ import com.benefit.vo.BenefitPackageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -47,6 +47,7 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
 
     /**
      * 分页查询权益包
+     *
      * @param request
      * @return
      */
@@ -86,6 +87,7 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
 
     /**
      * 新增权益包
+     *
      * @param request
      * @return
      */
@@ -109,9 +111,9 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
 
         //查询是否有重名的权益包,如果有,不让新增
         Long isExist = benefitPackageMapper.selectCount(new QueryWrapper<BenefitPackage>().eq("package_name", request.getPackageName()));
-        if (isExist > 0){
+        if (isExist > 0) {
             log.info("This package_name is exist!");
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"This package_name is exist!");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "This package_name is exist!");
         }
 
         // 插入权益包
@@ -119,7 +121,7 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
         if (count <= 0) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "save package failed.");
         }
-        log.info("save Package success,PackageName is : {}",benefitPackage.getPackageName());
+        log.info("save Package success,PackageName is : {}", benefitPackage.getPackageName());
 
         // 获取该权益包的ID
         Long packageId = benefitPackage.getId();
@@ -148,6 +150,64 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
             }
         }
         return productIds.size();
+    }
+
+    /**
+     * 更新权益包,先删除再插入新的
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    @Transactional
+    public int updatePackage(BenefitPackageRequest request) {
+
+        //修改benefit_package的数据
+        BenefitPackage benefitPackage = new BenefitPackage();
+
+        benefitPackage.setRemark(request.getRemark());
+        benefitPackage.setPackageName(request.getPackageName());
+        benefitPackage.setPrice(request.getPrice());
+        benefitPackage.setStatus(request.getStatus());
+        benefitPackage.setUpdateTime(LocalDateTime.now());
+        benefitPackage.setQuantity(request.getQuantity());
+
+        Long isExist = benefitPackageMapper.selectCount(new QueryWrapper<BenefitPackage>().eq("package_name", benefitPackage.getPackageName()));
+
+        if (isExist <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "This packageName is not exist !");
+        }
+
+        //TODO 判断传进来的权益包参数是否有修改, 如果没有就不调方法修改
+        int updateBp = benefitPackageMapper.update(benefitPackage, new QueryWrapper<BenefitPackage>()
+                .eq("package_name", benefitPackage.getPackageName()));
+
+        //修改package_product_rel表中的productId
+        //先删除旧的关联数据再插入新的
+        int deleteCount = packageProductRelMapper.delete(new QueryWrapper<PackageProductRel>()
+                .eq("package_id", request.getId()));
+        log.info("It has been deleted {} relData", deleteCount);
+
+        //将关联的权益产品清除为0时,就不插入新数据了
+        if (request.getProductNames().size() <= 0) {
+            return 1;
+        }
+        //获取productName的ids
+        List<Long> list = new ArrayList<>();
+        for (String product : request.getProductNames()) {
+            BenefitProduct bp = benefitProductMapper.selectOne(
+                    new QueryWrapper<BenefitProduct>().eq("product_name", product).eq("status", Status.ACTIVE));
+
+            if (bp == null) {
+                log.info("Product {} is not activated or does not exist.", product);
+                continue;
+            }
+
+            Long productId = bp.getId();
+            list.add(productId);
+        }
+
+        return packageProductRelMapper.insertPackageProductRelBatch(benefitPackage.getId(), list);
     }
 
 }

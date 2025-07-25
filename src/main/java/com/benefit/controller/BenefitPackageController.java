@@ -41,9 +41,37 @@ public class BenefitPackageController {
     }
 
 
+    /**
+     * 新增权益包
+     * @param request
+     * @return
+     */
     @PostMapping("/savePackage")
     @ApiOperation("新建权益包")
     public BaseResponse<Integer> savePackage (@RequestBody BenefitPackageRequest request){
+
+        if (request == null){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"request param is null");
+        }
+
+        if (request.getPackageName() == null || request.getPackageName().isEmpty()){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"packageName can't be null");
+        }
+
+        if (request.getQuantity() == null || request.getQuantity() < 0){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"Quantity must great than 0!");
+        }
+
+        int count = benefitPackageService.savePackage(request);
+        if (count < 0){
+            return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"Save package failed!");
+        }
+        return ResultUtils.success(count);
+    }
+
+    @PostMapping("/updatePackage")
+    @ApiOperation("更改权益包")
+    public BaseResponse<Integer> updatePackage(@RequestBody BenefitPackageRequest request){
 
         if (request == null){
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"request param is null");
@@ -57,10 +85,10 @@ public class BenefitPackageController {
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"Quantity must great than 0!");
         }
 
-        int count = benefitPackageService.savePackage(request);
-        if (count < 0){
-            return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"Save package failed!");
+        int updateCount = benefitPackageService.updatePackage(request);
+        if (updateCount < 0){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"update package failed!");
         }
-        return ResultUtils.success(count);
+        return ResultUtils.success(updateCount);
     }
 }

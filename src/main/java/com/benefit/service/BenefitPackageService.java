@@ -15,4 +15,6 @@ public interface BenefitPackageService  extends IService<BenefitPackage> {
     PageResult<BenefitPackageVo> queryPackage(BenefitPackageRequest request);
 
     int savePackage(BenefitPackageRequest request);
+
+    int updatePackage(BenefitPackageRequest request);
 }
