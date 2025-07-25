@@ -77,7 +77,7 @@ public class BenefitPackageController {
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"request param is null");
         }
 
-        if (request.getPackageName() == null || request.getPackageName().isEmpty()){
+        if (request.getId() == null || request.getId() <= 0){
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"No products specified");
         }
 

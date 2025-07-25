@@ -1,6 +1,7 @@
 package com.benefit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -171,7 +173,7 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
         benefitPackage.setUpdateTime(LocalDateTime.now());
         benefitPackage.setQuantity(request.getQuantity());
 
-        Long isExist = benefitPackageMapper.selectCount(new QueryWrapper<BenefitPackage>().eq("package_name", benefitPackage.getPackageName()));
+        Long isExist = benefitPackageMapper.selectCount(new QueryWrapper<BenefitPackage>().eq("id", request.getId()));
 
         if (isExist <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "This packageName is not exist !");
@@ -179,7 +181,7 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
 
         //TODO 判断传进来的权益包参数是否有修改, 如果没有就不调方法修改
         int updateBp = benefitPackageMapper.update(benefitPackage, new QueryWrapper<BenefitPackage>()
-                .eq("package_name", benefitPackage.getPackageName()));
+                .eq("id", request.getId()));
 
         //修改package_product_rel表中的productId
         //先删除旧的关联数据再插入新的
@@ -188,7 +190,15 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
         log.info("It has been deleted {} relData", deleteCount);
 
         //将关联的权益产品清除为0时,就不插入新数据了
-        if (request.getProductNames().size() <= 0) {
+        // 获取 productNames 并过滤掉空字符串和纯空格字符串
+        List<String> productNames = Optional.ofNullable(request.getProductNames())
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(name -> name != null && !name.trim().isEmpty())
+                .collect(Collectors.toList());
+
+        // 判断过滤后的集合是否为空
+        if (productNames.isEmpty()) {
             return 1;
         }
         //获取productName的ids
@@ -206,7 +216,7 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
             list.add(productId);
         }
 
-        return packageProductRelMapper.insertPackageProductRelBatch(benefitPackage.getId(), list);
+        return packageProductRelMapper.insertPackageProductRelBatch(request.getId(), list);
     }
 
 }
