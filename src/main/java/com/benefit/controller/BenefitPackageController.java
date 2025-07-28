@@ -69,6 +69,12 @@ public class BenefitPackageController {
         return ResultUtils.success(count);
     }
 
+
+    /**
+     * 更改权益包
+     * @param request
+     * @return
+     */
     @PostMapping("/updatePackage")
     @ApiOperation("更改权益包")
     public BaseResponse<Integer> updatePackage(@RequestBody BenefitPackageRequest request){
