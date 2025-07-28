@@ -8,7 +8,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -56,7 +56,7 @@ public class BenefitActivity implements Serializable {
     private Integer purchaseLimit;
 
 
-    private Set<BenefitPackage> packages;
+    private List<BenefitPackage> packages;
 
     private LocalDateTime createTime;
 

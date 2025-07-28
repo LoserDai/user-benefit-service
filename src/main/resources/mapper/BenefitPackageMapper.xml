@@ -63,4 +63,20 @@
         ORDER BY t1.create_time DESC
         ) tmp
     </select>
+
+    <select id="selectOneByIdAndStatus" resultMap="BenefitPackageVoMap">
+        select *
+        from benefit_package
+        <where>
+
+            <if test="status != null">
+                AND status = #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+            </if>
+
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+
+        </where>
+    </select>
 </mapper>
