@@ -3,10 +3,8 @@ package com.benefit.controller;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.PageResult;
 import com.benefit.common.ResultUtils;
-import com.benefit.exception.BusinessException;
 import com.benefit.model.entity.PointTransaction;
 import com.benefit.model.enums.ErrorCode;
-import com.benefit.request.BenefitProductRequest;
 import com.benefit.request.PointTransactionRequest;
 import com.benefit.service.PointTransactionService;
 import com.benefit.vo.PointTransactionVo;
@@ -19,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Allen

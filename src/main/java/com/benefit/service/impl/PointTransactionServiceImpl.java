@@ -9,7 +9,6 @@ import com.benefit.converter.PointTransactionConverter;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.PointTransactionMapper;
 import com.benefit.mapper.UserMapper;
-import com.benefit.model.entity.BenefitProduct;
 import com.benefit.model.entity.PointTransaction;
 import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
@@ -20,7 +19,6 @@ import com.benefit.vo.PointTransactionVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;

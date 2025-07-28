@@ -7,7 +7,6 @@ import com.benefit.mapper.ActivityPackageRelMapper;
 import com.benefit.mapper.BenefitActivityMapper;
 import com.benefit.mapper.BenefitPackageMapper;
 import com.benefit.model.entity.BenefitActivity;
-import com.benefit.model.entity.BenefitPackage;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.Status;
 import com.benefit.request.BenefitActivityRequest;
@@ -20,7 +19,6 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Allen
