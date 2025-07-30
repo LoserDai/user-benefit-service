@@ -10,4 +10,6 @@ import com.benefit.request.BenefitActivityRequest;
  */
 public interface BenefitActivityService extends IService<BenefitActivity> {
     int saveActivity(BenefitActivityRequest request);
+
+    int updateActivity(BenefitActivityRequest request);
 }

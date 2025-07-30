@@ -43,4 +43,17 @@ public class BenefitActivityController {
 
         return ResultUtils.success(count);
     }
+
+    @PostMapping("/updateActivity")
+    @ApiOperation("修改权益活动")
+    public BaseResponse<Integer> updateActivity(@RequestBody BenefitActivityRequest request){
+        if (request.checkParamIsExist()){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"paramJson can't be null or ''");
+        }
+        int count = benefitActivityService.updateActivity(request);
+        if (count < 0){
+            return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"Update activity failed!");
+        }
+        return ResultUtils.success(count);
+    }
 }
