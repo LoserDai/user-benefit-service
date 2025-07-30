@@ -115,4 +115,9 @@ public class BenefitActivityServiceImpl extends ServiceImpl<BenefitActivityMappe
         log.info("Successfully associated {} benefit packages to activity ID: {}", packageIdList.size(), activityId);
         return packageIdList.size();
     }
+
+    @Override
+    public int updateActivity(BenefitActivityRequest request) {
+        return 0;
+    }
 }
