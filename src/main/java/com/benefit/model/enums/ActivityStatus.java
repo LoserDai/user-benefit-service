@@ -39,10 +39,18 @@ public enum ActivityStatus {
         return null;
     }
 
+    /**
+     * 活动是否已完成
+     * @return
+     */
     public boolean isFinished() {
         return this == ENDED || this == CANCELED;
     }
 
+    /**
+     * 活动是否还在进行中
+     * @return
+     */
     public boolean isRunning() {
         return this == ONGOING;
     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.benefit.mapper.BenefitActivityMapper">
+
+    <update id="updateStatus">
+        UPDATE benefit_activity
+        <set>
+            status = #{status},
+            update_time = NOW(),
+            <!-- 当状态变为 ENDED 时，自动设置结束时间为当前时间 -->
+            <if test="status != null and status.name() == 'ENDED'">
+                end_time = NOW(),
+                remark = CONCAT(IFNULL(remark, ''), '手动结束于', NOW()),
+            </if>
+            <!-- 当状态变为 CANCELED 时，更新备注 -->
+            <if test="status != null and status.name() == 'CANCELED'">
+                remark = CONCAT(IFNULL(remark, ''), '手动取消于', NOW()),
+            </if>
+        </set>
+        WHERE id = #{id}
+        <!-- 添加状态流转保护 -->
+        AND status NOT IN ('ENDED', 'CANCELED')
+    </update>
+
+</mapper>

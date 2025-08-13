@@ -1,7 +1,10 @@
 package com.benefit.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.ResultUtils;
+import com.benefit.exception.BusinessException;
+import com.benefit.model.enums.ActivityStatus;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.BenefitActivityRequest;
 import com.benefit.service.BenefitActivityService;
@@ -47,8 +50,16 @@ public class BenefitActivityController {
     @PostMapping("/updateActivity")
     @ApiOperation("修改权益活动")
     public BaseResponse<Integer> updateActivity(@RequestBody BenefitActivityRequest request){
-        if (request.checkParamIsExist()){
-            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"paramJson can't be null or ''");
+        // 参数校验
+        if (ObjectUtils.isNull(request)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        if(ObjectUtils.isNull(request.getId()) || request.getId() <= 0){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"ActivityId is null");
+        }
+
+        if(ObjectUtils.isNull(request.getStatus())){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"ActivityStatus is null");
         }
         int count = benefitActivityService.updateActivity(request);
         if (count < 0){

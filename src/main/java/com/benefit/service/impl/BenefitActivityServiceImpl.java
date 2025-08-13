@@ -1,18 +1,21 @@
 package com.benefit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.ActivityPackageRelMapper;
 import com.benefit.mapper.BenefitActivityMapper;
 import com.benefit.mapper.BenefitPackageMapper;
 import com.benefit.model.entity.BenefitActivity;
+import com.benefit.model.enums.ActivityStatus;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.Status;
 import com.benefit.request.BenefitActivityRequest;
 import com.benefit.service.BenefitActivityService;
 import com.benefit.vo.BenefitPackageVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -116,8 +119,25 @@ public class BenefitActivityServiceImpl extends ServiceImpl<BenefitActivityMappe
         return packageIdList.size();
     }
 
+
+    /**
+     * 修改权益活动
+     * @param request
+     * @return
+     */
     @Override
     public int updateActivity(BenefitActivityRequest request) {
-        return 0;
+
+        Long id = request.getId();
+        ActivityStatus status = request.getStatus();
+
+        // 校验活动ID是否存在
+        Long isExist = benefitActivityMapper.selectCount(new QueryWrapper<BenefitActivity>().eq("id", id));
+        if (isExist <= 0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"Activity does not exist");
+        }
+
+        // 执行状态更新
+        return benefitActivityMapper.updateStatus(status, id);
     }
 }
