@@ -19,4 +19,8 @@ public interface BenefitActivityMapper extends BaseMapper<BenefitActivity> {
     List<BenefitActivity> selectExpiredActivities();
 
     int batchUpdateToEnded(List<BenefitActivity> activities);
+
+    List<BenefitActivity> selectNotStartActivities();
+
+    int batchUpdateToStart(List<BenefitActivity> activities);
 }

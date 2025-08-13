@@ -30,6 +30,15 @@
           AND end_time &lt;= NOW()
     </select>
 
+    <!-- 查询要开始的活动 -->
+    <select id="selectNotStartActivities" resultType="com.benefit.model.entity.BenefitActivity">
+        SELECT id
+        FROM benefit_activity
+        WHERE status = 'NOT_STARTED'
+          AND start_time &lt;= NOW()
+        AND end_time > NOW()
+    </select>
+
     <!-- 批量更新状态为结束 -->
     <update id="batchUpdateToEnded">
         UPDATE benefit_activity
@@ -37,6 +46,19 @@
         status = 'ENDED',
         update_time = NOW(),
         remark = CONCAT(IFNULL(remark, ''), '系统自动结束于', NOW())
+        WHERE id IN
+        <foreach collection="activities" item="activity" open="(" separator="," close=")">
+            #{activity.id}
+        </foreach>
+    </update>
+
+
+    <update id="batchUpdateToStart">
+        UPDATE benefit_activity
+        SET
+        status = 'ONGOING',
+        update_time = NOW(),
+        remark = CONCAT(IFNULL(remark, ''), '系统自动开始于', NOW())
         WHERE id IN
         <foreach collection="activities" item="activity" open="(" separator="," close=")">
             #{activity.id}

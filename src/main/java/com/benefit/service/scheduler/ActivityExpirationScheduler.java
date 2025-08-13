@@ -38,4 +38,20 @@ public class ActivityExpirationScheduler {
             log.info("Successfully ended {} activities", count);
         }
     }
+
+    @Scheduled(cron = "0 * * * * *")
+    @Transactional
+    public void checkAndStartExpiredActivities() {
+        // 查询所有需要开始的活动
+        List<BenefitActivity> activities = benefitActivityMapper.selectNotStartActivities();
+
+        if (!activities.isEmpty()) {
+            log.info("Found {} activities to start", activities.size());
+
+            // 批量更新状态为 ONGOING
+            int count = benefitActivityMapper.batchUpdateToStart(activities);
+
+            log.info("Successfully started {} activities", count);
+        }
+    }
 }
