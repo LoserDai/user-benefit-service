@@ -6,6 +6,8 @@ import com.benefit.model.enums.ActivityStatus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author Allen
  * @date 2025/6/10 15:13
@@ -13,4 +15,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface BenefitActivityMapper extends BaseMapper<BenefitActivity> {
     int updateStatus(@Param("status") ActivityStatus status, @Param("id") Long id);
+
+    List<BenefitActivity> selectExpiredActivities();
+
+    int batchUpdateToEnded(List<BenefitActivity> activities);
 }
