@@ -22,7 +22,9 @@ public class ActivityExpirationScheduler {
 
     private final BenefitActivityMapper benefitActivityMapper;
 
-    // 每分钟执行一次（可根据需要调整频率）
+    /**
+     * 定时关闭已过期的活动
+     */
     @Scheduled(cron = "0 * * * * *")
     @Transactional
     public void checkAndEndExpiredActivities() {
@@ -39,6 +41,9 @@ public class ActivityExpirationScheduler {
         }
     }
 
+    /**
+     * 定时开启已开始的活动
+     */
     @Scheduled(cron = "0 * * * * *")
     @Transactional
     public void checkAndStartExpiredActivities() {
