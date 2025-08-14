@@ -1,8 +1,9 @@
 package com.benefit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.benefit.common.PageResult;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.ActivityPackageRelMapper;
 import com.benefit.mapper.BenefitActivityMapper;
@@ -12,16 +13,19 @@ import com.benefit.model.enums.ActivityStatus;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.Status;
 import com.benefit.request.BenefitActivityRequest;
+import com.benefit.request.BenefitPackageRequest;
 import com.benefit.service.BenefitActivityService;
+import com.benefit.vo.BenefitActivityVo;
 import com.benefit.vo.BenefitPackageVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Allen
@@ -139,5 +143,37 @@ public class BenefitActivityServiceImpl extends ServiceImpl<BenefitActivityMappe
 
         // 执行状态更新
         return benefitActivityMapper.updateStatus(status, id);
+    }
+
+    @Override
+    public PageResult<BenefitActivityVo> queryActivityList(BenefitActivityRequest request) {
+
+        // 预处理参数：过滤 packageIds 中的空字符串
+        if (request != null && request.getPackageIds() != null) {
+            List<String> filteredIds = request.getPackageIds().stream()
+                    .filter(id -> id != null && !id.trim().isEmpty())
+                    .collect(Collectors.toList());
+
+            request.setPackageIds(filteredIds);
+        }
+
+        int pageNum = Optional.ofNullable(request)
+                .map(BenefitActivityRequest::getPageNum)
+                .filter(num -> num > 0)
+                .orElse(1);
+
+        int pageSize = Optional.ofNullable(request)
+                .map(BenefitActivityRequest::getPageSize)
+                .filter(size -> size > 0 && size <= 500)
+                .orElse(10);
+
+        Page<BenefitActivityVo> page = new Page<>(pageNum, pageSize);
+        List<BenefitActivityVo> list = benefitActivityMapper.selectPageList(page,request);
+
+        return new PageResult<>(
+                list,
+                page.getTotal(),
+                (int) page.getCurrent(),
+                (int) page.getSize());
     }
 }

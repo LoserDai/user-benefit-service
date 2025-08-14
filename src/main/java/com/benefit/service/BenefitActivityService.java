@@ -1,8 +1,10 @@
 package com.benefit.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.benefit.common.PageResult;
 import com.benefit.model.entity.BenefitActivity;
 import com.benefit.request.BenefitActivityRequest;
+import com.benefit.vo.BenefitActivityVo;
 
 /**
  * @author Allen
@@ -12,4 +14,6 @@ public interface BenefitActivityService extends IService<BenefitActivity> {
     int saveActivity(BenefitActivityRequest request);
 
     int updateActivity(BenefitActivityRequest request);
+
+    PageResult<BenefitActivityVo> queryActivityList(BenefitActivityRequest request);
 }

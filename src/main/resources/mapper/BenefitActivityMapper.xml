@@ -2,6 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.benefit.mapper.BenefitActivityMapper">
 
+    <!-- 主结果映射 -->
+    <resultMap id="BenefitActivityVoMap" type="com.benefit.vo.BenefitActivityVo">
+        <!-- 活动表字段 -->
+        <id property="id" column="activity_id" />
+        <result property="activityName" column="activity_name" />
+        <result property="startTime" column="start_time" />
+        <result property="endTime" column="end_time" />
+        <result property="status" column="status"
+                typeHandler="org.apache.ibatis.type.EnumTypeHandler"
+                javaType="com.benefit.model.enums.ActivityStatus"/>
+        <result property="activityType" column="activity_type" />
+        <result property="price" column="price" />
+        <result property="remark" column="remark" />
+        <result property="minPurchase" column="min_purchase" />
+        <result property="purchaseLimit" column="purchase_limit" />
+        <result property="discountValue" column="discount_value" />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+
     <update id="updateStatus">
         UPDATE benefit_activity
         <set>
@@ -64,5 +83,81 @@
             #{activity.id}
         </foreach>
     </update>
+    
+    <select id="selectPageList" resultMap="BenefitActivityVoMap">
+        select * from (
+        SELECT
+            t1.id AS activity_id,
+            t1.activity_name,
+            t3.id AS package_id,
+            t3.package_name,
+            t1.start_time,
+            t1.end_time,
+            t1.status,
+            t1.activity_type,
+            t1.price,
+            t1.remark,
+            t1.min_purchase,
+            t1.purchase_limit,
+            t1.discount_value,
+            t1.create_time
+        FROM
+            benefit_activity t1
+                LEFT JOIN activity_package_rel t2 ON t1.id = t2.activity_id
+                LEFT JOIN benefit_package t3 ON t2.package_id = t3.id
+        <where>
+            <if test="request.activityName != null and request.activityName != ''">
+                AND t1.activity_name LIKE CONCAT('%', #{request.activityName}, '%')
+            </if>
+
+            <if test="request.packageIds != null and request.packageIds.size() > 0">
+                AND t3.id IN
+                <foreach collection="request.packageIds" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+
+            <if test="request.status != null">
+                AND t1.status = #{request.status, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+            </if>
+
+            <if test="request.activityType != null">
+                AND t1.activity_type = #{request.activityType}
+            </if>
+
+            <if test="request.price != null">
+                AND t1.price = #{request.price}
+            </if>
+
+            <if test="request.startTime != null">
+                AND t1.start_time &gt;= #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND t1.end_time &lt;= #{request.endTime}
+            </if>
+
+            <if test="request.remark != null">
+                AND t1.remark = #{request.remark}
+            </if>
+
+            <if test="request.minPurchase != null">
+                AND t1.min_purchase = #{request.minPurchase}
+            </if>
+
+            <if test="request.purchaseLimit != null">
+                AND t1.purchase_limit = #{request.purchaseLimit}
+            </if>
+
+            <if test="request.discountValue != null">
+                AND t1.discount_value = #{request.discountValue}
+            </if>
+
+            <if test="request.createTime != null">
+                AND DATE(t1.create_time) = DATE(#{request.createTime})
+            </if>
+        </where>
+        ORDER BY t1.create_time DESC
+        ) tmp
+    </select>
 
 </mapper>
