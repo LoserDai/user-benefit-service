@@ -1,16 +1,17 @@
 package com.benefit.utils;
 
-/**
- * @author Allen
- * @date 2025/6/10 17:10
- * 用于操作积分和余额的工具类
- */
+
 
 import com.benefit.model.entity.BenefitPoints;
 
 import java.math.BigDecimal;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+/**
+ * @author Allen
+ * @date 2025/6/10 17:10
+ * 用于操作积分和余额的工具类
+ */
 
 public class BenefitUtils {
     // 使用可重入锁保证线程安全
