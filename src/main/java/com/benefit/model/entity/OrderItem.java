@@ -7,6 +7,7 @@ import lombok.*;
 
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author Allen
@@ -16,24 +17,29 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//TODO 表没建
 @TableName("t_order_item")
 public class OrderItem implements Serializable {
 
     @TableId(type = IdType.AUTO)
     private Long id;
 
-    private String orderId;
+    private Long orderId;
 
+    //商品类型(1:权益产品 2:权益包 3:其他类型)
     private Integer itemType;
 
+    //商品ID
     private Long itemId;
 
+    //商品名称
     private String itemName;
 
+    //数量
     private Integer quantity;
 
-    private Integer pointPrice;
+    //单价
+    private BigDecimal pointPrice;
 
-    private Integer totalPoint;
+    //总价
+    private BigDecimal totalPoint;
 }

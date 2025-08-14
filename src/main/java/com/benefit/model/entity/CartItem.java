@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -16,28 +17,45 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//TODO 建表语句没写, 表没建
 @TableName("t_cart_item")
 public class CartItem implements Serializable {
 
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    // 关联购物车ID
+    private Long cartId;
+
+    // 关联用户ID
     private Long userId;
 
+    // 商品类型(1:权益产品 2:权益包 3:其他类型)
     private Integer itemType;
 
+    // 商品ID
     private Long itemId;
 
-    private Integer quantity;
+    // 商品名称（冗余存储，避免频繁关联查询）
+    private String itemName;
 
-    private Boolean selected;
+    // 商品图片
+    private String itemImage;
 
-    private LocalDateTime createTime;
+    // 单价积分
+    private BigDecimal pointPrice;
 
-    private LocalDateTime updateTime;
+    // 数量
+    private Integer quantity = 1;
 
-    // 关联的权益对象 可能是权益产品也有可能是权益包
-    // BenefitProduct 或 BenefitPackage
+    // 是否选中(0:未选 1:选中)
+    private Boolean selected = true;
+
+    // 创建时间
+    private LocalDateTime createTime = LocalDateTime.now();
+
+    // 更新时间
+    private LocalDateTime updateTime = LocalDateTime.now();
+
+    // 关联的权益对象（非数据库字段）
     private Object benefitItem;
 }

@@ -1,12 +1,15 @@
 package com.benefit.model.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.benefit.model.enums.OrderStatus;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,17 +21,16 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//TODO 表没建
 @TableName("t_order_main")
 public class OrderMain implements Serializable {
 
-    //订单号(规则: ORD+yyMMdd+8位序列)'
-    private String orderId;
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
     private Long userId;
 
     //订单总积分
-    private Integer totalPoint;
+    private BigDecimal totalPoint;
 
     //状态(0:待支付 1:已支付 2:已发货 3:已完成 4:已取消)
     private OrderStatus status;
