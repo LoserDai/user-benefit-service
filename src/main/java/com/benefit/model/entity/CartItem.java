@@ -22,7 +22,6 @@ public class CartItem implements Serializable {
 
     private Long userId;
 
-
     private Integer itemType;
 
     private Long itemId;

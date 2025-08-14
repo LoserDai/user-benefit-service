@@ -30,12 +30,16 @@ public class OrderMain implements Serializable {
     //状态(0:待支付 1:已支付 2:已发货 3:已完成 4:已取消)
     private OrderStatus status;
 
+    //付款日期
     private LocalDateTime payTime;
 
+    //交货日期
     private LocalDateTime deliveryTime;
 
+    //完成日期
     private LocalDateTime completeTime;
 
+    //取消原因
     private String cancelReason;
 
     private LocalDateTime createTime;
