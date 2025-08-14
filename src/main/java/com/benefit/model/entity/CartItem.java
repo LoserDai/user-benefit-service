@@ -2,6 +2,7 @@ package com.benefit.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 import java.io.Serializable;
@@ -15,6 +16,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//TODO 建表语句没写, 表没建
+@TableName("t_cart_item")
 public class CartItem implements Serializable {
 
     @TableId(type = IdType.AUTO)

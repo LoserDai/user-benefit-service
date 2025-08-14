@@ -1,6 +1,7 @@
 package com.benefit.model.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.benefit.model.enums.OrderStatus;
 import lombok.*;
@@ -17,6 +18,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//TODO 表没建
+@TableName("t_order_main")
 public class OrderMain implements Serializable {
 
     //订单号(规则: ORD+yyMMdd+8位序列)'

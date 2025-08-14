@@ -2,6 +2,7 @@ package com.benefit.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 
@@ -15,6 +16,8 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//TODO 表没建
+@TableName("t_order_item")
 public class OrderItem implements Serializable {
 
     @TableId(type = IdType.AUTO)
