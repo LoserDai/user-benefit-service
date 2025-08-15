@@ -90,11 +90,11 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
     }
 
     /**
-     * 新增权益包
-     *
-     * @param request
-     * @return
-     */
+    * @Description: 新增权益包
+    * @Param: [request, imageFile]
+    * @Return: int
+    * @Author: Allen
+    */
     @Override
     @Transactional
     public int savePackage(BenefitPackageRequest request, MultipartFile imageFile) {
@@ -165,11 +165,11 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
     }
 
     /**
-     * 更新权益包,先删除再插入新的
-     *
-     * @param request
-     * @return
-     */
+    * @Description: 更新权益包,先删除再插入新的
+    * @Param: [request]
+    * @Return: int
+    * @Author: Allen
+    */
     @Override
     @Transactional
     public int updatePackage(BenefitPackageRequest request) {

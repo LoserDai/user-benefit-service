@@ -160,6 +160,12 @@ public class BenefitActivityServiceImpl extends ServiceImpl<BenefitActivityMappe
         return benefitActivityMapper.updateStatus(status, id);
     }
 
+    /**
+    * @Description: 分页查询接口
+    * @Param: [request]
+    * @Return: com.benefit.common.PageResult<com.benefit.vo.BenefitActivityVo>
+    * @Author: Allen
+    */
     @Override
     public PageResult<BenefitActivityVo> queryActivityList(BenefitActivityRequest request) {
 

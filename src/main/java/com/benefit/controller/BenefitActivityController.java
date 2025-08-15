@@ -5,8 +5,6 @@ import com.benefit.common.BaseResponse;
 import com.benefit.common.PageResult;
 import com.benefit.common.ResultUtils;
 import com.benefit.exception.BusinessException;
-import com.benefit.model.entity.BenefitActivity;
-import com.benefit.model.enums.ActivityStatus;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.BenefitActivityRequest;
 import com.benefit.service.BenefitActivityService;
