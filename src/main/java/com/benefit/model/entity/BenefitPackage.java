@@ -26,6 +26,8 @@ public class BenefitPackage implements Serializable {
     // 权益包名称
     private String packageName;
 
+    private String packageImagePath;
+
     private List<BenefitProduct> products;
 
     // 权益包数量（库存）

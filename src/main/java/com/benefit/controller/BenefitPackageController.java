@@ -10,12 +10,12 @@ import com.benefit.vo.BenefitPackageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * @author Allen
@@ -47,8 +47,10 @@ public class BenefitPackageController {
      * @return
      */
     @PostMapping("/savePackage")
-    @ApiOperation("新建权益包")
-    public BaseResponse<Integer> savePackage (@RequestBody BenefitPackageRequest request){
+    @ApiOperation(value = "新建权益包", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BaseResponse<Integer> savePackage (
+            @RequestParam("file") MultipartFile file,
+            @RequestPart("request")  @Valid BenefitPackageRequest request){
 
         if (request == null){
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"request param is null");
@@ -62,7 +64,7 @@ public class BenefitPackageController {
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"Quantity must great than 0!");
         }
 
-        int count = benefitPackageService.savePackage(request);
+        int count = benefitPackageService.savePackage(request,file);
         if (count < 0){
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"Save package failed!");
         }

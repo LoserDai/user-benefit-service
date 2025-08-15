@@ -15,10 +15,12 @@ import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.Status;
 import com.benefit.request.BenefitPackageRequest;
 import com.benefit.service.BenefitPackageService;
+import com.benefit.service.storage.ImageStorageService;
 import com.benefit.vo.BenefitPackageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -44,6 +46,9 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
 
     @Resource
     private PackageProductRelMapper packageProductRelMapper;
+
+    @Resource
+    private ImageStorageService imageStorageService;
 
     /**
      * 分页查询权益包
@@ -92,21 +97,29 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
      */
     @Override
     @Transactional
-    public int savePackage(BenefitPackageRequest request) {
+    public int savePackage(BenefitPackageRequest request, MultipartFile imageFile) {
 
         // 创建权益包: 权益产品只能是已激活的
         List<String> productNames = request.getProductNames();
+        BenefitPackage benefitPackage = new BenefitPackage();
 
         // 创建权益包对象
-        BenefitPackage benefitPackage = new BenefitPackage();
-        benefitPackage.setPackageName(request.getPackageName());
-        benefitPackage.setQuantity(request.getQuantity());
-        benefitPackage.setPrice(request.getPrice());
-        benefitPackage.setStatus(request.getStatus());
-        benefitPackage.setRemark(request.getRemark());
+        try {
+            benefitPackage.setPackageName(request.getPackageName());
+            benefitPackage.setQuantity(request.getQuantity());
+            benefitPackage.setPrice(request.getPrice());
+            benefitPackage.setStatus(request.getStatus());
+            benefitPackage.setRemark(request.getRemark());
 
-        benefitPackage.setCreateTime(LocalDateTime.now());
-        benefitPackage.setUpdateTime(LocalDateTime.now());
+            benefitPackage.setCreateTime(LocalDateTime.now());
+            benefitPackage.setUpdateTime(LocalDateTime.now());
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String imageUrl = imageStorageService.storeBenefitProductImage(imageFile);
+                benefitPackage.setPackageImagePath(imageUrl);
+            }
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+        }
 
         //查询是否有重名的权益包,如果有,不让新增
         Long isExist = benefitPackageMapper.selectCount(new QueryWrapper<BenefitPackage>().eq("package_name", request.getPackageName()));

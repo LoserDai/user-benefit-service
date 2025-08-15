@@ -24,8 +24,6 @@ public class BenefitProductRequest extends PageBaseRequest implements Serializab
 
     private String remark;
 
-
-
     @ApiModelProperty("产品名称")
     private String productName;
 
