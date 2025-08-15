@@ -18,10 +18,10 @@ import java.util.UUID;
 public class ImageStorageService {
 
     @Value("${image.storage.path}")
-    private String storagePath;
+    private String baseStoragePath;
 
     @Value("${image.access.url}")
-    private String accessUrl;
+    private String baseAccessUrl;
 
     /**
      * 存储权益产品图片
@@ -30,26 +30,28 @@ public class ImageStorageService {
      * @return 图片访问URL
      * @throws IOException 文件存储异常
      */
-    public String storeBenefitProductImage(MultipartFile imageFile) throws IOException {
-        // 确保存储目录存在
-        Path storageDir = Paths.get(storagePath);
-        if (!Files.exists(storageDir)) {
-            Files.createDirectories(storageDir);
+    public String storeBenefitProductImage(MultipartFile imageFile,String morePath) throws IOException {
+        // 1. 校验文件合法性
+        validateImageFile(imageFile);
+
+        // 2. 构建完整存储路径（使用 Paths 安全拼接，避免修改成员变量）
+        // 基础路径 + 额外路径（如 "basePath/benefitProduct/"）
+        Path fullStoragePath = Paths.get(baseStoragePath, morePath);
+
+        // 3. 确保存储目录存在（不存在则创建）
+        if (!Files.exists(fullStoragePath)) {
+            Files.createDirectories(fullStoragePath);
         }
 
-        // 生成唯一文件名 (UUID + 原扩展名)
-        String originalFilename = imageFile.getOriginalFilename();
-        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String uniqueFileName = UUID.randomUUID() + fileExtension;
+        // 4. 生成唯一文件名（处理边界情况）
+        String uniqueFileName = generateUniqueFileName(imageFile.getOriginalFilename());
 
-        // 构建存储路径
-        Path filePath = storageDir.resolve(uniqueFileName);
-
-        // 保存文件
+        // 5. 保存文件（Files.copy 会自动关闭输入流，无需手动处理）
+        Path filePath = fullStoragePath.resolve(uniqueFileName);
         Files.copy(imageFile.getInputStream(), filePath);
 
-        // 返回访问URL
-        return accessUrl + uniqueFileName;
+        // 6. 构建访问URL（安全拼接，确保路径正确）
+        return buildAccessUrl(baseAccessUrl, morePath, uniqueFileName);
     }
 
     /**
@@ -62,7 +64,7 @@ public class ImageStorageService {
         try {
             // 从URL中提取文件名
             String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-            Path filePath = Paths.get(storagePath, fileName);
+            Path filePath = Paths.get(baseStoragePath, fileName);
 
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
@@ -72,5 +74,61 @@ public class ImageStorageService {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    /**
+    * @Description: 校验图片是否合法
+    * @Param: [file]
+    * @Return: void
+    * @Author: Allen
+    */
+    private void validateImageFile(MultipartFile file) {
+        // 校验文件不为空
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("上传的图片文件不能为空");
+        }
+
+        // 校验文件类型（ContentType）
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("上传的文件必须是图片类型（支持 jpg、png、jpeg 等）");
+        }
+
+        // 校验文件名不为空
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || originalFilename.trim().isEmpty()) {
+            throw new IllegalArgumentException("文件名为空，无法解析扩展名");
+        }
+    }
+
+    /**
+    * @Description: 生成唯一文件名（处理无扩展名的情况）
+    * @Param: [originalFilename]
+    * @Return: java.lang.String
+    * @Author: Allen
+    */
+    private String generateUniqueFileName(String originalFilename) {
+        // 提取扩展名（若无扩展名，默认用 .png）
+        int extIndex = originalFilename.lastIndexOf(".");
+        String fileExtension = (extIndex > 0) ? originalFilename.substring(extIndex) : ".png";
+
+        // 生成UUID + 扩展名（确保唯一性）
+        return UUID.randomUUID() + fileExtension;
+    }
+
+    /**
+    * @Description: 安全拼接访问URL（处理斜杠问题）
+    * @Param: [baseUrl, morePath, fileName]
+    * @Return: java.lang.String
+    * @Author: Allen
+    */
+    private String buildAccessUrl(String baseUrl, String morePath, String fileName) {
+        // 确保 baseUrl 以斜杠结尾，morePath 不以斜杠开头/结尾，避免重复
+        String normalizedBaseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
+        // 去除首尾斜杠
+        String normalizedMorePath = morePath.replaceAll("^/+", "").replaceAll("/+$", "");
+        String pathSeparator = normalizedMorePath.isEmpty() ? "" : "/";
+
+        return normalizedBaseUrl + normalizedMorePath + pathSeparator + fileName;
     }
 }

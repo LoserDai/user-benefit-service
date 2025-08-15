@@ -31,9 +31,9 @@ mybatis-plus:
 
 image:
   storage:
-    path: ./images/benefit-products/
+    path: ./images/
   access:
-    url: http://localhost:8080/images/benefit-products/
+    url: /images/
 
 # 可选：日志级别配置（推荐用于开发调试 MyBatis SQL）
 logging:

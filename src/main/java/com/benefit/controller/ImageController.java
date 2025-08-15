@@ -6,6 +6,7 @@ import com.benefit.model.enums.ErrorCode;
 import com.benefit.service.storage.ImageStorageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,13 +32,13 @@ public class ImageController {
     }
 
     /**
-     * 上传权益产品图片
+     * 上传图片
      *
      * @param file 图片文件
      * @return 图片访问URL
      */
-    @PostMapping("/benefit-products")
-    @ApiOperation("新增权益图片")
+    @PostMapping(value = "/uploadPic",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiOperation("上传文件接口")
     public BaseResponse uploadBenefitProductImage(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"Please check the file!");
@@ -49,9 +50,9 @@ public class ImageController {
             if (contentType == null || !contentType.startsWith("image/")) {
                 return ResultUtils.error(ErrorCode.PARAMS_ERROR,"Please upload picture!");
             }
-
+            String morePath = "others/";
             // 存储图片
-            String imageUrl = imageStorageService.storeBenefitProductImage(file);
+            String imageUrl = imageStorageService.storeBenefitProductImage(file,morePath);
             return ResultUtils.success(Collections.singletonMap("imageUrl", imageUrl));
         } catch (IOException e) {
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"Picture upload failed!");

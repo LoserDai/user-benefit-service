@@ -74,9 +74,9 @@ public class BenefitActivityServiceImpl extends ServiceImpl<BenefitActivityMappe
         activity.setPrice(request.getPrice());
         activity.setMinPurchase(request.getMinPurchase());
         activity.setPurchaseLimit(request.getPurchaseLimit());
-
+        String morePath = "benefit-activities/";
         if (imageFile != null && !imageFile.isEmpty()) {
-            String imageUrl = imageStorageService.storeBenefitProductImage(imageFile);
+            String imageUrl = imageStorageService.storeBenefitProductImage(imageFile,morePath);
             activity.setActivityImagePath(imageUrl);
         }
 

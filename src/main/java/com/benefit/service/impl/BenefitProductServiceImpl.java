@@ -59,9 +59,10 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
             product.setUpdateTime(LocalDateTime.now());
 
         try {
-
+            String morePath = "benefit-products/";
             if (imageFile != null && !imageFile.isEmpty()) {
-                String imageUrl = imageStorageService.storeBenefitProductImage(imageFile);
+
+                String imageUrl = imageStorageService.storeBenefitProductImage(imageFile,morePath);
                 product.setProductImagePath(imageUrl);
             }
 

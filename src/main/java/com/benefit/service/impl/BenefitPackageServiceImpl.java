@@ -110,11 +110,11 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
             benefitPackage.setPrice(request.getPrice());
             benefitPackage.setStatus(request.getStatus());
             benefitPackage.setRemark(request.getRemark());
-
+            String morePath = "benefit-packages/";
             benefitPackage.setCreateTime(LocalDateTime.now());
             benefitPackage.setUpdateTime(LocalDateTime.now());
             if (imageFile != null && !imageFile.isEmpty()) {
-                String imageUrl = imageStorageService.storeBenefitProductImage(imageFile);
+                String imageUrl = imageStorageService.storeBenefitProductImage(imageFile,morePath);
                 benefitPackage.setPackageImagePath(imageUrl);
             }
         } catch (Exception e) {
