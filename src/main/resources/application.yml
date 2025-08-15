@@ -7,6 +7,14 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 10MB  # 单个文件最大大小
+      max-request-size: 10MB  # 整个请求最大大小
+      enabled: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 mybatis-plus:
   configuration:
@@ -19,6 +27,13 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除（0）
       id-type: auto
   mapper-locations: classpath:mapper/*.xml
+
+
+image:
+  storage:
+    path: ./images/benefit-products/
+  access:
+    url: http://localhost:8080/images/benefit-products/
 
 # 可选：日志级别配置（推荐用于开发调试 MyBatis SQL）
 logging:

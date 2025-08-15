@@ -12,10 +12,12 @@ import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.Status;
 import com.benefit.request.BenefitProductRequest;
 import com.benefit.service.BenefitProductService;
+import com.benefit.service.storage.ImageStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -35,13 +37,17 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
     @Resource
     private BenefitProductMapper productMapper;
 
+    @Resource
+    private ImageStorageService imageStorageService;
+
     /**
-     * 新增产品
-     * @param productRequest
-     * @return
-     */
+    * @Description: 新增权益产品
+    * @Param: BenefitProductRequest MultipartFile
+    * @Return: Long
+    * @Author: Allen
+    */
     @Override
-    public Long insertProduct(BenefitProductRequest productRequest) {
+    public Long insertProduct(BenefitProductRequest productRequest, MultipartFile imageFile) {
 
             BenefitProduct product = new BenefitProduct();
             product.setProductName(productRequest.getProductName());
@@ -53,6 +59,12 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
             product.setUpdateTime(LocalDateTime.now());
 
         try {
+
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String imageUrl = imageStorageService.storeBenefitProductImage(imageFile);
+                product.setProductImagePath(imageUrl);
+            }
+
             log.info("before insert: id = {}", product.getId());
             Integer insert = productMapper.insert(product);
             if (insert == 0){

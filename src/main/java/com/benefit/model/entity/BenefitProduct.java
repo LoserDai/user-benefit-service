@@ -22,6 +22,9 @@ public class BenefitProduct implements Serializable {
 
     private String productName;
 
+    // 存储相对路径（推荐）
+    private String productImagePath;
+
     private BigDecimal price;
 
     private String remark;

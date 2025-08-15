@@ -25,7 +25,7 @@ public class ActivityExpirationScheduler {
     /**
      * 定时关闭已过期的活动
      */
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0/5 * * * ?")
     @Transactional
     public void checkAndEndExpiredActivities() {
         // 查询所有需要结束的活动
@@ -44,7 +44,7 @@ public class ActivityExpirationScheduler {
     /**
      * 定时开启已开始的活动
      */
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0/5 * * * ?")
     @Transactional
     public void checkAndStartExpiredActivities() {
         // 查询所有需要开始的活动

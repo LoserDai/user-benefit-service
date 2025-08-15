@@ -10,12 +10,19 @@ import com.benefit.request.BenefitProductRequest;
 import com.benefit.service.BenefitProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * @author Allen
@@ -31,14 +38,17 @@ public class BenefitProductController {
     private BenefitProductService benefitProductService;
 
     @ApiOperation("新增产品接口")
-    @PostMapping("/insertProduct")
-    public BaseResponse insertProduct(@RequestBody BenefitProductRequest productRequest) {
+    @PostMapping(value = "/insertProduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BaseResponse insertProduct(
+            @RequestParam("file") MultipartFile file,
+            @RequestPart("productRequest") @Valid BenefitProductRequest productRequest) {
+
 
         Boolean isExist = benefitProductService.isExistProduct(productRequest);
-        if (isExist){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"This Product is isExist.");
+        if (isExist) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "This Product is isExist.");
         }
-        Long isInsert = benefitProductService.insertProduct(productRequest);
+        Long isInsert = benefitProductService.insertProduct(productRequest, file);
 
         return ResultUtils.success(isInsert);
     }

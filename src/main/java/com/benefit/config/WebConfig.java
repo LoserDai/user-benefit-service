@@ -2,7 +2,9 @@ package com.benefit.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author Allen
@@ -10,6 +12,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Value("${image.storage.path}")
+    private String imageStoragePath;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -18,5 +24,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 映射本地文件系统路径到URL
+        registry.addResourceHandler("/images/benefit-products/**")
+                .addResourceLocations("file:" + imageStoragePath)
+                // 设置缓存时间 (秒)
+                .setCachePeriod(3600);
     }
 }

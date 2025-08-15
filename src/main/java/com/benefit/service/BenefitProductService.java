@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.benefit.common.PageResult;
 import com.benefit.model.entity.BenefitProduct;
 import com.benefit.request.BenefitProductRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Allen
@@ -11,7 +12,7 @@ import com.benefit.request.BenefitProductRequest;
  */
 public interface BenefitProductService extends IService<BenefitProduct> {
 
-    Long insertProduct(BenefitProductRequest productRequest);
+    Long insertProduct(BenefitProductRequest productRequest, MultipartFile file);
 
     Boolean isExistProduct(BenefitProductRequest productRequest);
 
