@@ -118,7 +118,7 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
                 benefitPackage.setPackageImagePath(imageUrl);
             }
         } catch (Exception e) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"save packageImagePath error!");
         }
 
         //查询是否有重名的权益包,如果有,不让新增

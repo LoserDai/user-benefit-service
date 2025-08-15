@@ -14,12 +14,11 @@ import com.benefit.vo.BenefitActivityVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * @author Allen
@@ -36,13 +35,15 @@ public class BenefitActivityController {
 
     @PostMapping("/saveActivity")
     @ApiOperation("新增权益活动")
-    public BaseResponse<Integer> saveActivity(@RequestBody BenefitActivityRequest request){
+    public BaseResponse<Integer> saveActivity(
+            @RequestParam("file") MultipartFile file,
+            @RequestPart("request") @Valid BenefitActivityRequest request){
 
         if (request.checkParamIsExist()){
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"paramJson can't be null or ''");
         }
 
-        int count = benefitActivityService.saveActivity(request);
+        int count = benefitActivityService.saveActivity(request,file);
         if (count < 0){
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"Save activity failed!");
         }

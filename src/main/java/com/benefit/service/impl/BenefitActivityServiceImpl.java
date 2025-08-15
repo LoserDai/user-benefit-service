@@ -15,10 +15,12 @@ import com.benefit.model.enums.Status;
 import com.benefit.request.BenefitActivityRequest;
 import com.benefit.request.BenefitPackageRequest;
 import com.benefit.service.BenefitActivityService;
+import com.benefit.service.storage.ImageStorageService;
 import com.benefit.vo.BenefitActivityVo;
 import com.benefit.vo.BenefitPackageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -47,16 +49,21 @@ public class BenefitActivityServiceImpl extends ServiceImpl<BenefitActivityMappe
     @Resource
     private ActivityPackageRelMapper activityPackageRelMapper;
 
+    @Resource
+    private ImageStorageService imageStorageService;
+
     /**
      * 新增权益活动
      * @param request
      * @return Integer
      */
     @Override
-    public int saveActivity(BenefitActivityRequest request) {
+    public int saveActivity(BenefitActivityRequest request, MultipartFile imageFile) {
 
         //创建权益活动, 权益包只能是已激活的
         BenefitActivity activity = new BenefitActivity();
+
+        try {
 
         activity.setActivityName(request.getActivityName());
         activity.setActivityType(request.getActivityType());
@@ -68,6 +75,11 @@ public class BenefitActivityServiceImpl extends ServiceImpl<BenefitActivityMappe
         activity.setMinPurchase(request.getMinPurchase());
         activity.setPurchaseLimit(request.getPurchaseLimit());
 
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imageUrl = imageStorageService.storeBenefitProductImage(imageFile);
+            activity.setActivityImagePath(imageUrl);
+        }
+
         //不一定传了的参数
         if (!request.getDescription().isEmpty()) {
             activity.setDescription(request.getDescription());
@@ -78,6 +90,9 @@ public class BenefitActivityServiceImpl extends ServiceImpl<BenefitActivityMappe
 
         activity.setCreateTime(LocalDateTime.now());
         activity.setUpdateTime(LocalDateTime.now());
+        }catch (Exception e){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"save activityImagePath error");
+        }
 
         //查询是否有重名的权益活动,如果有,不让新增
         Long isExist = benefitActivityMapper.selectCount(new QueryWrapper<BenefitActivity>().eq("activity_name", request.getActivityName()));

@@ -12,7 +12,9 @@
         <result property="status" column="status"
                 typeHandler="org.apache.ibatis.type.EnumTypeHandler"
                 javaType="com.benefit.model.enums.ActivityStatus"/>
-        <result property="activityType" column="activity_type" />
+        <result property="activityType" column="activity_type"
+                typeHandler="org.apache.ibatis.type.EnumTypeHandler"
+                javaType="com.benefit.model.enums.ActivityType"/>
         <result property="price" column="price" />
         <result property="remark" column="remark" />
         <result property="minPurchase" column="min_purchase" />

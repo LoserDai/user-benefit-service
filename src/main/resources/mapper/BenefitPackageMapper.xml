@@ -6,7 +6,9 @@
         <id property="id" column="id"/>
         <result property="packageName" column="package_name"/>
         <result property="productName" column="product_name"/>
-        <result property="status" column="status" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property="status" column="status"
+                javaType="com.benefit.model.enums.Status"
+                typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         <result property="quantity" column="quantity"/>
         <result property="price" column="price"/>
         <result property="remark" column="remark"/>

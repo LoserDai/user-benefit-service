@@ -32,6 +32,9 @@ public class BenefitActivity implements Serializable {
     // 活动类型
     private ActivityType activityType;
 
+
+    private String activityImagePath;
+
     // 活动状态
     private ActivityStatus status;
 
