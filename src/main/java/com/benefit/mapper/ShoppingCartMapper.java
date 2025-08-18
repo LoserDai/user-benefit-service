@@ -19,6 +19,7 @@ public interface ShoppingCartMapper extends BaseMapper<ShoppingCart> {
             "SELECT id, user_id, total_selected_points, create_time, update_time",
             "FROM t_shopping_cart",
             "WHERE user_id = #{userId}",
+            "AND status = 1",
             "LIMIT 1",
             "</script>"
     })

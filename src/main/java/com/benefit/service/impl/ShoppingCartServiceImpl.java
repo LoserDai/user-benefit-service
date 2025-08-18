@@ -76,6 +76,7 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
         // 创建新购物车
         ShoppingCart newCart = new ShoppingCart();
         newCart.setUserId(request.getUserId());
+        newCart.setStatus(1);
         newCart.setTotalSelectedPoints(request.getTotalSelectedPoints());
 
         // 设置创建/更新时间

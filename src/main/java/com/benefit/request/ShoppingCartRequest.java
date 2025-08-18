@@ -27,6 +27,9 @@ public class ShoppingCartRequest implements Serializable {
     // 关联用户ID（唯一）
     private Long userId;
 
+    //状态: 0-失效; 1-活跃
+    private Integer status;
+
     // 创建时间
     private LocalDateTime createTime;
 
