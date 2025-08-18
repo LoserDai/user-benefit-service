@@ -2,6 +2,7 @@ package com.benefit.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.benefit.model.entity.ShoppingCart;
+import com.benefit.request.ShoppingCartRequest;
 
 /**
  * @Author Allen
@@ -9,4 +10,5 @@ import com.benefit.model.entity.ShoppingCart;
  * @Description
  */
 public interface ShoppingCartService extends IService<ShoppingCart> {
+    Integer createShoppingCart(ShoppingCartRequest request);
 }

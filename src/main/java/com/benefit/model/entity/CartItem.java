@@ -47,15 +47,10 @@ public class CartItem implements Serializable {
     // 数量
     private Integer quantity = 1;
 
-    // 是否选中(0:未选 1:选中)
-    private Boolean selected = true;
-
     // 创建时间
-    private LocalDateTime createTime = LocalDateTime.now();
+    private LocalDateTime createTime;
 
     // 更新时间
-    private LocalDateTime updateTime = LocalDateTime.now();
+    private LocalDateTime updateTime;
 
-    // 关联的权益对象（非数据库字段）
-    private Object benefitItem;
 }

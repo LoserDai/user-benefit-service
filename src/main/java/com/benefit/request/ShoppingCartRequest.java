@@ -1,25 +1,25 @@
-package com.benefit.model.entity;
-
+package com.benefit.request;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
+import com.benefit.model.entity.CartItem;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
 /**
- * @author Allen
- * @date 2025/6/10 16:22
- * 购物车表,里面包含多个CartItem
+ * @Author Allen
+ * @Date 2025/8/18 15:03
+ * @Description
  */
+
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@TableName("t_shopping_cart")
-public class ShoppingCart implements Serializable {
+public class ShoppingCartRequest implements Serializable {
+
+    private static final long serialVersionUID = 3191241716373120793L;
 
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -38,4 +38,5 @@ public class ShoppingCart implements Serializable {
 
     // 选中商品总积分
     private BigDecimal totalSelectedPoints;
+
 }
