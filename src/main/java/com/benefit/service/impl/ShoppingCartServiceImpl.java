@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,6 +87,15 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
         //插入数据
         if (list.isEmpty()){
             log.info("user clear the shoppingCart!");
+            // 把shoppingCart的状态也修改了
+            ShoppingCart cart = new ShoppingCart();
+            cart.setId(request.getId());
+            cart.setStatus(0);
+            cart.setUpdateTime(LocalDateTime.now());
+            cart.setTotalSelectedPoints(BigDecimal.ZERO);
+            cart.setUserId(request.getUserId());
+            shoppingCartMapper.updateById(cart);
+            log.info("update shoppingCart status!");
             return 0;
         }
         int insertCount = 0;
