@@ -1,9 +1,12 @@
 package com.benefit.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.ResultUtils;
+import com.benefit.exception.BusinessException;
 import com.benefit.model.entity.ShoppingCart;
+import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.ShoppingCartRequest;
 import com.benefit.service.ShoppingCartService;
@@ -16,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
 
 /**
  * @Author Allen
@@ -35,15 +41,59 @@ public class ShoppingCartController {
 
     @PostMapping("/createShoppingCart")
     @ApiOperation("创建购物车")
-    public BaseResponse<Integer> createShoppingCart(@RequestBody ShoppingCartRequest request){
+    public BaseResponse<Integer> createShoppingCart(@RequestBody ShoppingCartRequest request, HttpServletRequest httpServletRequest){
 
-        if (request.getUserId() == null || request.getTotalSelectedPoints() == null || request.getCartItems().size() <= 0){
+
+        Object userObj = httpServletRequest.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        long userId = currentUser.getId();
+
+        if (request.getTotalSelectedPoints() == null || request.getCartItems().size() <= 0){
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"params can't be null!");
         }
+        request.setUserId(userId);
         Integer count = shoppingCartService.createShoppingCart(request);
         if (count <= 0){
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"create shoppingCart failed!");
         }
+        return ResultUtils.success(count);
+    }
+
+
+    @PostMapping("/showShoppingCart")
+    @ApiOperation("查看购物车")
+    public BaseResponse<ShoppingCart> showShoppingCart(HttpServletRequest request){
+
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        long userId = currentUser.getId();
+
+        ShoppingCart shoppingCart = shoppingCartService.showShoppingCart(userId);
+        if (ObjectUtils.isNull(shoppingCart)) {
+            return null;
+        }
+        return ResultUtils.success(shoppingCart);
+    }
+
+    @PostMapping("/updateShoppingCart")
+    @ApiOperation("修改购物车")
+    public BaseResponse<Integer> updateShoppingCart(HttpServletRequest httpServletRequest, @RequestBody ShoppingCartRequest request){
+
+        Object userObj = httpServletRequest.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        long userId = currentUser.getId();
+        request.setUserId(userId);
+        Integer count = shoppingCartService.updateShoppingCart(request);
+
         return ResultUtils.success(count);
     }
 }

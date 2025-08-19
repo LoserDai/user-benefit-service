@@ -11,4 +11,8 @@ import com.benefit.request.ShoppingCartRequest;
  */
 public interface ShoppingCartService extends IService<ShoppingCart> {
     Integer createShoppingCart(ShoppingCartRequest request);
+
+    ShoppingCart showShoppingCart(long userId);
+
+    Integer updateShoppingCart(ShoppingCartRequest request);
 }

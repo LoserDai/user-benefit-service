@@ -1,12 +1,15 @@
 package com.benefit.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.CartItemMapper;
 import com.benefit.mapper.ShoppingCartMapper;
+import com.benefit.mapper.UserMapper;
 import com.benefit.model.entity.CartItem;
 import com.benefit.model.entity.ShoppingCart;
+import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.ShoppingCartRequest;
 import com.benefit.service.ShoppingCartService;
@@ -36,6 +39,9 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
     @Resource
     private CartItemMapper cartItemMapper;
 
+    @Resource
+    private UserMapper userMapper;
+
     /**
     * @Description: create shoppingCart
     * @Param: [request]
@@ -50,6 +56,46 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
 
         // 2. 批量保存购物车项
         return batchSaveCartItems(request.getCartItems(), cart);
+    }
+
+
+    /**
+    * @Description: show ShoppingCart
+    * @Param: [userId]
+    * @Return: com.benefit.model.entity.ShoppingCart
+    * @Author: Allen
+    */
+    @Override
+    public ShoppingCart showShoppingCart(long userId) {
+        User user = userMapper.selectById(userId);
+        if (ObjectUtils.isNull(user)){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"This user isn't exist!");
+        }
+
+        return shoppingCartMapper.selectByUserId(userId);
+    }
+
+    @Override
+    public Integer updateShoppingCart(ShoppingCartRequest request) {
+
+        List<CartItem> list = request.getCartItems();
+        //先将所有的删除，再插入？
+        int deleteCount = cartItemMapper.delete(new QueryWrapper<CartItem>().eq("user_id", request.getUserId())
+                .eq("cart_id", request.getId()));
+        log.info("deleted cartItem count: {}", deleteCount);
+        //插入数据
+        if (list.isEmpty()){
+            log.info("user clear the shoppingCart!");
+            return 0;
+        }
+        int insertCount = 0;
+        for (CartItem item : list) {
+            insertCount = cartItemMapper.insert(item);
+            log.info("insert cartItem: {}",item.getItemName());
+            insertCount ++;
+        }
+
+        return insertCount;
     }
 
     /**
