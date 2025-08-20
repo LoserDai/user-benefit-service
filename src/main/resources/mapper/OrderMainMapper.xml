@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.benefit.mapper.OrderMainMapper">
+
+<resultMap id="OrderMainVoMap" type="com.benefit.vo.OrderMainVo">
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="user_id" property="userId" jdbcType="BIGINT"/>
+    <result column="order_id" property="orderId" jdbcType="BIGINT"/>
+    <result column="item_type" property="itemType" jdbcType="INTEGER"/>
+    <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+    <result column="quantity" property="quantity" jdbcType="INTEGER"/>
+    <result column="point_price" property="pointPrice" jdbcType="DECIMAL"/>
+    <result column="total_point" property="totalPoint" jdbcType="DECIMAL"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+
+    <!-- 处理 OrderStatus 枚举字段 -->
+    <result column="status" property="status" jdbcType="TINYINT"
+            javaType="com.benefit.model.enums.OrderStatus"
+            typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+</resultMap>
+
+<!-- 通用查询列 -->
+<sql id="Base_Column_List">
+    id, user_id, address_id, total_point, status, pay_time, delivery_time, complete_time, 
+        cancel_reason, create_time, update_time
+</sql>
+
+<select id="pageQuery" resultMap="OrderMainVoMap">
+    SELECT
+    t1.user_id,
+    t1.status,
+    t2.order_id,
+    t2.item_name,
+    t2.item_type,
+    t2.quantity,
+    t2.point_price,
+    t2.total_point
+    FROM t_order_main t1
+    LEFT JOIN t_order_item t2 ON t1.id = t2.order_id
+    <where>
+        <!-- 用户ID条件 -->
+        <if test="request.userId != null">
+            AND t1.user_id = #{request.userId,jdbcType=BIGINT}
+        </if>
+
+        <!-- 订单状态条件 -->
+        <if test="request.status != null">
+            AND t1.status = #{request.status, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+        </if>
+
+        <!-- 订单ID条件 -->
+        <if test="request.orderId != null">
+            AND t1.id = #{request.orderId,jdbcType=BIGINT}
+        </if>
+
+        <!-- 商品类型条件 -->
+        <if test="request.itemType != null">
+            AND t2.item_type = #{request.itemType,jdbcType=INTEGER}
+        </if>
+
+        <!-- 商品名称模糊查询条件 -->
+        <if test="request.itemName != null and request.itemName != ''">
+            AND t2.item_name LIKE CONCAT('%', #{request.itemName,jdbcType=VARCHAR}, '%')
+        </if>
+    </where>
+    ORDER BY t1.create_time desc
+</select>
+
+<!-- 根据用户ID查询订单列表 -->
+<select id="selectByUserId" parameterType="java.lang.Long">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_order_main
+    WHERE user_id = #{userId,jdbcType=BIGINT},
+    and status = 0
+    ORDER BY create_time DESC
+</select>
+
+<!-- 更新订单支付时间 -->
+<update id="updatePayTime">
+    UPDATE t_order_main
+    SET
+    status = 1, <!-- 已支付 -->
+    pay_time = CURRENT_TIMESTAMP,
+    update_time = CURRENT_TIMESTAMP
+    WHERE id = #{id,jdbcType=BIGINT} AND status = 0 <!-- 只有待支付订单才能更新为已支付 -->
+</update>
+
+<!-- 取消订单 -->
+<update id="cancelOrder">
+    UPDATE t_order_main
+    SET
+    status = 4, <!-- 已取消 -->
+    cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+    update_time = CURRENT_TIMESTAMP
+    WHERE id = #{id,jdbcType=BIGINT} AND status = 0 <!-- 只有待支付订单才能取消 -->
+</update>
+
+</mapper>

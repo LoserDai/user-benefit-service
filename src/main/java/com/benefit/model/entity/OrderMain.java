@@ -29,6 +29,9 @@ public class OrderMain implements Serializable {
 
     private Long userId;
 
+    //收货地址ID
+    private Long addressId;
+
     //订单总积分
     private BigDecimal totalPoint;
 
