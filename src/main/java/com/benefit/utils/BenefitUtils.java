@@ -27,14 +27,14 @@ public class BenefitUtils {
      * @throws IllegalArgumentException 如果参数为负
      */
 
-    public static BenefitPoints recharge(BenefitPoints points, int pointsToAdd, BigDecimal amountToAdd) {
+    public static BenefitPoints recharge(BenefitPoints points, int pointsToAdd, int amountToAdd) {
         //校验积分和余额是否为负数
         validateNonNegative(pointsToAdd, amountToAdd);
 
         lock.lock();
         try {
             points.setPoints(points.getPoints() + pointsToAdd);
-            points.setBalance(points.getBalance().add(amountToAdd));
+            points.setBalance(points.getBalance() + amountToAdd);
             return points;
         } finally {
             lock.unlock();
@@ -51,7 +51,7 @@ public class BenefitUtils {
      * @throws InsufficientFundsException 如果余额或积分不足
      * @throws IllegalArgumentException   如果参数为负
      */
-    public static BenefitPoints deduct(BenefitPoints points, int pointsToDeduct, BigDecimal amountToDeduct)
+    public static BenefitPoints deduct(BenefitPoints points, int pointsToDeduct, int amountToDeduct)
             throws InsufficientFundsException {
 
         //校验积分和余额是否为负数
@@ -64,13 +64,13 @@ public class BenefitUtils {
                         ", 可用 " + points.getPoints());
             }
 
-            if (points.getBalance().compareTo(amountToDeduct) < 0) {
+            if (points.getBalance() < amountToDeduct) {
                 throw new InsufficientFundsException("余额不足: 需要 " + amountToDeduct +
                         ", 可用 " + points.getBalance());
             }
 
             points.setPoints(points.getPoints() - pointsToDeduct);
-            points.setBalance(points.getBalance().subtract(amountToDeduct));
+            points.setBalance(points.getBalance() - amountToDeduct);
             return points;
         } finally {
             lock.unlock();
@@ -86,7 +86,7 @@ public class BenefitUtils {
      * @return 操作后的实体
      * @throws IllegalArgumentException 如果参数为负
      */
-    public static BenefitPoints refund(BenefitPoints points, int pointsToRefund, BigDecimal amountToRefund) {
+    public static BenefitPoints refund(BenefitPoints points, int pointsToRefund, int amountToRefund) {
         // 退款本质是充值操作
         return recharge(points, pointsToRefund, amountToRefund);
     }
@@ -101,7 +101,7 @@ public class BenefitUtils {
      * @throws InsufficientFundsException 如果余额或积分不足
      * @throws IllegalArgumentException   如果参数为负
      */
-    public static FreezeResult freeze(BenefitPoints points, int pointsToFreeze, BigDecimal amountToFreeze)
+    public static FreezeResult freeze(BenefitPoints points, int pointsToFreeze, int amountToFreeze)
             throws InsufficientFundsException {
 
         //校验积分和余额是否为负数
@@ -121,7 +121,7 @@ public class BenefitUtils {
 
             // 执行冻结操作
             points.setPoints(points.getPoints() - pointsToFreeze);
-            points.setBalance(points.getBalance().subtract(amountToFreeze));
+            points.setBalance(points.getBalance()- amountToFreeze);
 
             // 创建冻结记录
             FreezeRecord freezeRecord = new FreezeRecord(pointsToFreeze, amountToFreeze);
@@ -143,7 +143,7 @@ public class BenefitUtils {
         lock.lock();
         try {
             points.setPoints(points.getPoints() + freezeRecord.getFrozenPoints());
-            points.setBalance(points.getBalance().add(freezeRecord.getFrozenAmount()));
+            points.setBalance(points.getBalance() + freezeRecord.getFrozenAmount());
             return points;
         } finally {
             lock.unlock();
@@ -151,11 +151,11 @@ public class BenefitUtils {
     }
 
     // 验证参数非负
-    private static void validateNonNegative(int points, BigDecimal amount) {
+    private static void validateNonNegative(int points, int amount) {
         if (points < 0) {
             throw new IllegalArgumentException("积分不能为负: " + points);
         }
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+        if (amount < 0) {
             throw new IllegalArgumentException("金额不能为负: " + amount);
         }
     }
@@ -170,9 +170,9 @@ public class BenefitUtils {
     // 冻结记录实体
     public static class FreezeRecord {
         private final int frozenPoints;
-        private final BigDecimal frozenAmount;
+        private final int frozenAmount;
 
-        public FreezeRecord(int frozenPoints, BigDecimal frozenAmount) {
+        public FreezeRecord(int frozenPoints, int frozenAmount) {
             this.frozenPoints = frozenPoints;
             this.frozenAmount = frozenAmount;
         }
@@ -181,7 +181,7 @@ public class BenefitUtils {
             return frozenPoints;
         }
 
-        public BigDecimal getFrozenAmount() {
+        public int getFrozenAmount() {
             return frozenAmount;
         }
     }

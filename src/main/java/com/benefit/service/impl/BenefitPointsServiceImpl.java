@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.BenefitPointsMapper;
+import com.benefit.mapper.PointTransactionMapper;
 import com.benefit.model.entity.BenefitPoints;
+import com.benefit.model.entity.PointTransaction;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.BenefitPointsRequest;
 import com.benefit.service.BenefitPointsService;
@@ -27,12 +29,16 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
     @Resource
     private BenefitPointsMapper benefitPointsMapper;
 
+    @Resource
+    private PointTransactionMapper pointTransactionMapper;
+
 
     /**
-     * 调账
-     * @param request
-     * @return
-     */
+    * @Description: 调账
+    * @Param: [request]
+    * @Return: int
+    * @Author: Allen
+    */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int modifyBalance(BenefitPointsRequest request) {
@@ -44,7 +50,7 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
         Long userId = request.getUserId();
         Integer side = request.getSide();
         Integer pointsChange = request.getPoints();
-        BigDecimal balanceChange = request.getBalance();
+        Integer balanceChange = request.getBalance();
 
         // 校验操作类型
         if (side == null || (side != 0 && side != 1)) {
@@ -53,7 +59,7 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
 
         // 校验金额有效性
         if (pointsChange == null || pointsChange < 0 ||
-                balanceChange == null || balanceChange.compareTo(BigDecimal.ZERO) < 0) {
+                balanceChange == null || balanceChange < 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的金额参数");
         }
 
@@ -86,9 +92,9 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
 
         // 获取当前值
         int currentPoints = account.getPoints();
-        BigDecimal currentBalance = account.getBalance();
+        int currentBalance = account.getBalance();
         int newPoints;
-        BigDecimal newBalance;
+        int newBalance;
 
         // 根据操作类型处理
         String operationType = side == 0 ? "充值" : "扣减";
@@ -96,18 +102,18 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
         if (side == 0) {
             // 充值操作
             newPoints = currentPoints + pointsChange;
-            newBalance = currentBalance.add(balanceChange);
+            newBalance = currentBalance + balanceChange;
         } else {
             // 扣减操作 - 检查余额是否充足
             if (currentPoints < pointsChange) {
                 throw new BusinessException(ErrorCode.INSUFFICIENT_POINTS, "积分不足");
             }
-            if (currentBalance.compareTo(balanceChange) < 0) {
+            if (currentBalance < balanceChange) {
                 throw new BusinessException(ErrorCode.INSUFFICIENT_BALANCE, "余额不足");
             }
 
             newPoints = currentPoints - pointsChange;
-            newBalance = currentBalance.subtract(balanceChange);
+            newBalance = currentBalance - balanceChange;
         }
 
         // 更新账户
@@ -118,6 +124,28 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
         log.info("账户调账 | 操作:{} | 用户:{} | 原积分:{} | 新积分:{} | 原余额:{} | 新余额:{}",
                 operationType, userId, currentPoints, newPoints, currentBalance, newBalance);
 
-        return benefitPointsMapper.updateById(account);
+        int count = benefitPointsMapper.updateById(account);
+        //保存交易流水
+        PointTransaction pointTransaction = new PointTransaction();
+        pointTransaction.setUserId(request.getUserId());
+
+        if (request.getSide() == 0) {
+            pointTransaction.setChangeType(1);
+        }
+        if (request.getSide() == 1) {
+            pointTransaction.setChangeType(2);
+        }
+
+        pointTransaction.setChangePoint(request.getPoints());
+        pointTransaction.setChangeBalance(request.getBalance());
+
+        pointTransaction.setPointsAfter(newPoints);
+        pointTransaction.setBalanceAfter(newBalance);
+
+        pointTransaction.setRemark("账户调账");
+
+        int insert = pointTransactionMapper.insert(pointTransaction);
+        log.info("save pointTransaction: {}",pointTransaction);
+        return count;
     }
 }

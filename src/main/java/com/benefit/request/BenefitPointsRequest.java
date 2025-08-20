@@ -17,10 +17,10 @@ public class BenefitPointsRequest implements Serializable {
 
     private Long userId;
 
-    //side = 0 recharge; side = 1 deductions
+    //side = 0 充值; side = 1 扣减
     private Integer side;
 
     private Integer points ;
 
-    private BigDecimal balance ;
+    private Integer balance ;
 }

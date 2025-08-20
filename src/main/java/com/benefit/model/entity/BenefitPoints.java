@@ -26,5 +26,5 @@ public class BenefitPoints implements Serializable {
     private Integer points = 0;
 
     // 余额，默认值0
-    private BigDecimal balance = BigDecimal.ZERO;
+    private Integer balance =  0;
 }
