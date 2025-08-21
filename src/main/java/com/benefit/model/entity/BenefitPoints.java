@@ -23,8 +23,8 @@ public class BenefitPoints implements Serializable {
     private Long userId;
 
     // 积分数量，默认值0
-    private Integer points = 0;
+    private BigDecimal points;
 
     // 余额，默认值0
-    private Integer balance =  0;
+    private BigDecimal balance;
 }

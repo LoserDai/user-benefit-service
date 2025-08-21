@@ -20,7 +20,7 @@ public class BenefitPointsRequest implements Serializable {
     //side = 0 充值; side = 1 扣减
     private Integer side;
 
-    private Integer points ;
+    private BigDecimal points ;
 
-    private Integer balance ;
+    private BigDecimal balance ;
 }

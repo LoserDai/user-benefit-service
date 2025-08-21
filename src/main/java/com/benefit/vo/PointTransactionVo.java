@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -29,16 +30,16 @@ public class PointTransactionVo implements Serializable {
     private int changeType;
 
     // 积分变动值
-    private int changePoint;
+    private BigDecimal changePoint;
 
     // 更变后积分值
-    private int pointsAfter;
+    private BigDecimal pointsAfter;
 
     //余额变动值
-    private  int changeBalance;
+    private  BigDecimal changeBalance;
 
     // 更变后余额
-    private int balanceAfter;
+    private BigDecimal balanceAfter;
 
     // 关联业务ID(如订单号)
     private String bizId;

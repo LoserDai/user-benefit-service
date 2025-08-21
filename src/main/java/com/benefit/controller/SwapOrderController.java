@@ -58,12 +58,12 @@ public class SwapOrderController {
         //看看余额是否足够用于兑换
         BenefitPoints serviceOne = benefitPointsService.getOne(new QueryWrapper<BenefitPoints>()
                 .eq("user_id",userId));
-        if ("B/P".equals(order.getCcy()) && (serviceOne.getBalance() < order.getAmountSell().intValue())){
+        if ("B/P".equals(order.getCcy()) && (serviceOne.getBalance().compareTo(order.getAmountSell()) < 0)){
             log.info("user has {} Balance",serviceOne.getBalance());
             log.info("param is {} Balance",order.getAmountSell());
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"Has no enough Balance to Swap!");
         }
-        if ("P/B".equals(order.getCcy()) && (serviceOne.getPoints() < order.getAmountSell().intValue())){
+        if ("P/B".equals(order.getCcy()) && (serviceOne.getPoints().compareTo(order.getAmountSell()) < 0)){
             log.info("user has {} Points",serviceOne.getPoints());
             log.info("param is {} Points",order.getAmountSell());
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"Has no enough Points to Swap!");

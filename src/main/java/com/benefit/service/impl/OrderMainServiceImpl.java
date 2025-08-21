@@ -158,15 +158,15 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
         }
         //校验积分是否足够
         BenefitPoints userPoints = benefitPointsMapper.selectOne(new QueryWrapper<BenefitPoints>().eq("user_id", userId));
-        if (new BigDecimal(userPoints.getPoints()).compareTo(orderMain.getTotalPoint()) < 0) {
+        if (userPoints.getPoints().compareTo(orderMain.getTotalPoint()) < 0) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "points is not enough to pay! please recharge!");
         }
         //如果够，扣除积分
         BenefitPointsRequest req = new BenefitPointsRequest();
         req.setUserId(userId);
         req.setSide(1);
-        req.setPoints(orderMain.getTotalPoint().intValue());
-        req.setBalance(0);
+        req.setPoints(orderMain.getTotalPoint());
+        req.setBalance(BigDecimal.ZERO);
         //记账落库
         int modified = benefitPointsService.modifyBalance(req);
         if (modified <= 0) {

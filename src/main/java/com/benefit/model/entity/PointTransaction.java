@@ -7,6 +7,7 @@ import lombok.*;
 
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -28,15 +29,15 @@ public class PointTransaction implements Serializable {
     private Integer changeType;
 
     //变更积分
-    private Integer changePoint;
+    private BigDecimal changePoint;
 
     //更变后的积分
-    private Integer pointsAfter;
+    private BigDecimal pointsAfter;
 
-    private Integer changeBalance;
+    private BigDecimal changeBalance;
 
     //更变后的积分
-    private Integer balanceAfter;
+    private BigDecimal balanceAfter;
 
     // 关联业务ID
     private String bizId;

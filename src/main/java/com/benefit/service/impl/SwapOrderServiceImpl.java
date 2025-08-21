@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -66,25 +67,25 @@ public class SwapOrderServiceImpl extends ServiceImpl<SwapOrderMapper, SwapOrder
             order.setType("Balance swap to Points");
             //扣减
             req.setSide(1);
-            req.setBalance(order.getAmountSell().intValue());
-            req.setPoints(0);
+            req.setBalance(order.getAmountSell());
+            req.setPoints(BigDecimal.ZERO);
             reduceCount = benefitPointsService.modifyBalance(req);
             //增值
             req.setSide(0);
-            req.setBalance(0);
-            req.setPoints(order.getAmountBuy().intValue());
+            req.setBalance(BigDecimal.ZERO);
+            req.setPoints(order.getAmountBuy());
             addCount = benefitPointsService.modifyBalance(req);
         } else if ("P/B".equals(order.getCcy())) {
             order.setType("Points swap to Balance");
             //扣减
             req.setSide(1);
-            req.setPoints(order.getAmountSell().intValue());
-            req.setBalance(0);
+            req.setPoints(order.getAmountSell());
+            req.setBalance(BigDecimal.ZERO);
             reduceCount = benefitPointsService.modifyBalance(req);
             //增值
             req.setSide(0);
-            req.setBalance(order.getAmountBuy().intValue());
-            req.setPoints(0);
+            req.setBalance(order.getAmountBuy());
+            req.setPoints(BigDecimal.ZERO);
             addCount = benefitPointsService.modifyBalance(req);
         }else {
             throw new BusinessException(ErrorCode.PARAMS_ERROR,"ccy not in (B/P,P/B)");

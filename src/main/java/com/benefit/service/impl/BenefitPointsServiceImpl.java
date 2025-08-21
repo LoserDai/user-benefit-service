@@ -49,8 +49,8 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
 
         Long userId = request.getUserId();
         Integer side = request.getSide();
-        Integer pointsChange = request.getPoints();
-        Integer balanceChange = request.getBalance();
+        BigDecimal pointsChange = request.getPoints();
+        BigDecimal balanceChange = request.getBalance();
 
         // 校验操作类型
         if (side == null || (side != 0 && side != 1)) {
@@ -58,8 +58,8 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
         }
 
         // 校验金额有效性
-        if (pointsChange == null || pointsChange < 0 ||
-                balanceChange == null || balanceChange < 0) {
+        if (pointsChange == null || pointsChange.compareTo(BigDecimal.ZERO) <0 ||
+                balanceChange == null || balanceChange.compareTo(BigDecimal.ZERO) < 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的金额参数");
         }
 
@@ -91,29 +91,29 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
         }
 
         // 获取当前值
-        int currentPoints = account.getPoints();
-        int currentBalance = account.getBalance();
-        int newPoints;
-        int newBalance;
+        BigDecimal currentPoints = account.getPoints();
+        BigDecimal currentBalance = account.getBalance();
+        BigDecimal newPoints;
+        BigDecimal newBalance;
 
         // 根据操作类型处理
         String operationType = side == 0 ? "充值" : "扣减";
 
         if (side == 0) {
             // 充值操作
-            newPoints = currentPoints + pointsChange;
-            newBalance = currentBalance + balanceChange;
+            newPoints = currentPoints.add(pointsChange);
+            newBalance = currentBalance.add(balanceChange);
         } else {
             // 扣减操作 - 检查余额是否充足
-            if (currentPoints < pointsChange) {
+            if (currentPoints.compareTo(pointsChange)<0) {
                 throw new BusinessException(ErrorCode.INSUFFICIENT_POINTS, "积分不足");
             }
-            if (currentBalance < balanceChange) {
+            if (currentBalance.compareTo(balanceChange) < 0 ) {
                 throw new BusinessException(ErrorCode.INSUFFICIENT_BALANCE, "余额不足");
             }
 
-            newPoints = currentPoints - pointsChange;
-            newBalance = currentBalance - balanceChange;
+            newPoints = currentPoints.subtract(pointsChange);
+            newBalance = currentBalance.subtract(balanceChange);
         }
 
         // 更新账户
