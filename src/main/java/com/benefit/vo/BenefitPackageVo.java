@@ -30,6 +30,9 @@ public class BenefitPackageVo implements Serializable {
     @ApiModelProperty("权益产品")
     private String productName;
 
+    @ApiModelProperty("权益图片")
+    private String packageImagePath;
+
     @ApiModelProperty("状态")
     private Status status;
 

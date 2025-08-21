@@ -6,6 +6,7 @@
         <id property="id" column="id"/>
         <result property="packageName" column="package_name"/>
         <result property="productName" column="product_name"/>
+        <result property="packageImagePath" column="package_image_path" />
         <result property="status" column="status"
                 javaType="com.benefit.model.enums.Status"
                 typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
@@ -20,6 +21,7 @@
         SELECT
         t1.id,
         t1.package_name,
+        t1.package_image_path,
         t3.product_name,
         t1.status,
         t1.quantity,
