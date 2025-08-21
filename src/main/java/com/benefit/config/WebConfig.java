@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${image.storage.path}")
+    @Value("${app.image.storage.path}")
     private String imageStoragePath;
 
     @Override
@@ -29,7 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 映射本地文件系统路径到URL
-        registry.addResourceHandler("/images/benefit-products/**")
+        registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:" + imageStoragePath)
                 // 设置缓存时间 (秒)
                 .setCachePeriod(3600);
