@@ -92,6 +92,8 @@
             t1.id AS activity_id,
             t1.activity_name,
             t3.id AS package_id,
+            t1.activity_image_path,
+            t1.description,
             t3.package_name,
             t1.start_time,
             t1.end_time,
@@ -128,7 +130,7 @@
             </if>
 
             <if test="request.price != null">
-                AND t1.price = #{request.price}
+                AND t1.price >= #{request.price}
             </if>
 
             <if test="request.startTime != null">

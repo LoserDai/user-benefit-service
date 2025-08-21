@@ -30,6 +30,11 @@ public class BenefitActivityVo implements Serializable {
     @ApiModelProperty("权益活动名称")
     private String activityName;
 
+    @ApiModelProperty("权益活动图片")
+    private String activityImagePath;
+
+    private String description;
+
     @ApiModelProperty("权益包名称")
     private String packageName;
 
