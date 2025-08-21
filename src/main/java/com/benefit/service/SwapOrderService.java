@@ -8,4 +8,5 @@ import com.benefit.model.entity.SwapOrder;
  * @date 2025/7/11 11:05
  */
 public interface SwapOrderService extends IService<SwapOrder> {
+    int saveSwapOrder(SwapOrder order, long userId);
 }

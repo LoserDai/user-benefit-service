@@ -5,6 +5,7 @@ import com.benefit.common.BaseResponse;
 import com.benefit.common.ResultUtils;
 import com.benefit.exception.BusinessException;
 import com.benefit.model.entity.SwapConfig;
+import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.service.SwapConfigService;
 import io.swagger.annotations.Api;
@@ -15,9 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
 
 /**
  * @author Allen
@@ -37,11 +41,17 @@ public class SwapConfigController {
 
     @GetMapping("/getConfig")
     @ApiOperation("获取兑换配置接口")
-    public BaseResponse<SwapConfig> getConfigById(
-            @RequestParam String userId,
-            @RequestParam String ccy) {
+    public BaseResponse<SwapConfig> getConfigById(HttpServletRequest request, @RequestParam String ccy) {
 
-        if (StringUtils.isBlank(userId) || StringUtils.isBlank(ccy)) {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        long userId = currentUser.getId();
+
+
+        if (StringUtils.isBlank(ccy)) {
             return ResultUtils.error(ErrorCode.PARAMS_ERROR);
         }
 

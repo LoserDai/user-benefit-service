@@ -34,7 +34,7 @@ public class SwapOrder {
     // 客户编号
     private String customerId;
 
-    // 兑换类型
+    // 兑换类型(B/P):Balance兑Points  (P/B):Points兑Balance
     private String type;
 
     // 买卖币种 (B/P)

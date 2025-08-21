@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Allen
@@ -38,7 +40,7 @@ public class BenefitPointsController {
 
     @PostMapping("/query")
     @ApiOperation("查询接口")
-    public BaseResponse<BenefitPoints> queryPointsById(HttpServletRequest request){
+    public BaseResponse<BenefitPoints> queryPointsById(HttpServletRequest request,@RequestParam String ccy){
 
         User loginUser = userService.getLoginUser(request);
         if (ObjectUtils.isEmpty(loginUser)){
