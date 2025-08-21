@@ -49,7 +49,7 @@
             </if>
 
             <if test="request.quantity != null">
-                AND t1.quantity = #{request.quantity}
+                AND t1.quantity >= #{request.quantity}
             </if>
 
             <if test="request.price != null">
