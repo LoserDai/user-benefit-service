@@ -142,7 +142,15 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
         pointTransaction.setPointsAfter(newPoints);
         pointTransaction.setBalanceAfter(newBalance);
 
-        pointTransaction.setRemark("账户调账");
+        if (request.getType() == 1) {
+            pointTransaction.setRemark("兑换消费");
+        }
+        if (request.getType() == 2) {
+            pointTransaction.setRemark("账户调账");
+        }
+        if (request.getType() == 3) {
+            pointTransaction.setRemark("购买消费");
+        }
 
         int insert = pointTransactionMapper.insert(pointTransaction);
         log.info("save pointTransaction: {}",pointTransaction);

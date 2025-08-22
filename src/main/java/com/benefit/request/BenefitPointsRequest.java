@@ -17,6 +17,9 @@ public class BenefitPointsRequest implements Serializable {
 
     private Long userId;
 
+    // 1： 兑换消费  2：调账  3：购买消费
+    private Integer type;
+
     //side = 0 充值; side = 1 扣减
     private Integer side;
 

@@ -60,6 +60,7 @@ public class SwapOrderServiceImpl extends ServiceImpl<SwapOrderMapper, SwapOrder
         //记账
         BenefitPointsRequest req = new BenefitPointsRequest();
         req.setUserId(userId);
+        req.setType(1);
 
         int reduceCount = 0;
         int addCount = 0;

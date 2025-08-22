@@ -10,12 +10,10 @@ import com.benefit.mapper.*;
 import com.benefit.model.entity.*;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.OrderStatus;
-import com.benefit.request.BenefitActivityRequest;
 import com.benefit.request.BenefitPointsRequest;
 import com.benefit.request.OrderMainRequest;
 import com.benefit.service.BenefitPointsService;
 import com.benefit.service.OrderMainService;
-import com.benefit.vo.BenefitActivityVo;
 import com.benefit.vo.OrderMainVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -163,6 +161,7 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
         }
         //如果够，扣除积分
         BenefitPointsRequest req = new BenefitPointsRequest();
+        req.setType(3);
         req.setUserId(userId);
         req.setSide(1);
         req.setPoints(orderMain.getTotalPoint());
