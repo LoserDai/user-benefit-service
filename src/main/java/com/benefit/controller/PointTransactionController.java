@@ -1,9 +1,12 @@
 package com.benefit.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.PageResult;
 import com.benefit.common.ResultUtils;
+import com.benefit.exception.BusinessException;
 import com.benefit.model.entity.PointTransaction;
+import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.PointTransactionRequest;
 import com.benefit.service.PointTransactionService;
@@ -17,6 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
 
 /**
  * @author Allen
@@ -62,5 +70,29 @@ public class PointTransactionController {
 
         PageResult<PointTransactionVo> result = pointTransactionService.queryAllPointTransaction(request);
         return ResultUtils.success(result);
+    }
+
+    @PostMapping("/queryConsumed")
+    @ApiOperation("查询已消费的数据")
+    public BaseResponse<Map<String,BigDecimal>> queryConsumed(HttpServletRequest request , @RequestBody String changeType) {
+
+        Set<String> set = new HashSet<>(Arrays.asList("1", "2", "3"));
+        if (!set.contains(changeType)){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"params not current!");
+        }
+
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        long userId = currentUser.getId();
+
+
+        Map<String,BigDecimal> count = pointTransactionService.queryConsumed(userId,changeType);
+        if (CollectionUtils.isEmpty(count)){
+            return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"User has no transactions!");
+        }
+        return ResultUtils.success(count);
     }
 }

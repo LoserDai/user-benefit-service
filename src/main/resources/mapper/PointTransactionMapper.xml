@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.benefit.mapper.PointTransactionMapper">
+
+    <select id="queryConsumed" resultType="java.util.Map">
+        select
+            sum(change_point) as totalPoints,
+            sum(change_balance) as totalBalance
+        from point_transaction
+        where user_id = #{userId}
+          and change_type = #{changeType}
+    </select>
+</mapper>

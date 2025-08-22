@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -149,6 +150,12 @@ public class PointTransactionServiceImpl extends ServiceImpl<PointTransactionMap
                 resultPage.getTotal(),
                 pageNum, pageSize
         );
+    }
+
+    @Override
+    public Map<String,BigDecimal> queryConsumed(long userId, String changeType) {
+        Map<String,BigDecimal> count = transactionMapper.queryConsumed(userId,changeType);
+        return count;
     }
 
     /**
