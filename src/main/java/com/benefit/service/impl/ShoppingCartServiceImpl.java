@@ -166,6 +166,16 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
             log.info("shopping is null，user_id is: {}", cart.getUserId());
             return 0;
         }
+        //如果加入了相同的商品，将quantity +1
+        CartItem cartItem = cartItemMapper.selectOne(new QueryWrapper<CartItem>().eq("cart_id", cart.getId())
+                .eq("user_id", cart.getUserId())
+                .eq("item_id", items.get(0).getItemId())
+                .eq("item_type", items.get(0).getItemType()));
+        if (!ObjectUtils.isNull()){
+            cartItem.setQuantity(cartItem.getQuantity()+1);
+            int count = cartItemMapper.updateById(cartItem);
+            return count;
+        }
 
         // 1. 准备批量插入数据
         List<CartItem> batchItems = items.stream()
