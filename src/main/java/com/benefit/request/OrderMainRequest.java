@@ -18,7 +18,7 @@ public class OrderMainRequest extends PageBaseRequest implements Serializable {
 
     private Long userId;
 
-    private OrderStatus status;
+    private Integer status;
 
     private Long orderId;
 

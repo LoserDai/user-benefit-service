@@ -21,7 +21,7 @@ public class OrderMainVo implements Serializable {
 
     private Long userId;
 
-    private OrderStatus status;
+    private Integer status;
 
     private Long orderId;
 

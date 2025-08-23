@@ -18,7 +18,6 @@ import com.benefit.vo.OrderMainVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -54,6 +53,9 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
     @Resource
     private BenefitPointsService benefitPointsService;
 
+    @Resource
+    private CartItemMapper cartItemMapper;
+
     @Override
     public int createOrderMain(long userId) {
 
@@ -64,15 +66,14 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
         }
 
         //转换成订单
-        List<CartItem> list = shoppingCart.getCartItems();
-        if (CollectionUtils.isEmpty(list)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "This shoppingCart hasn't data!");
-        }
+        List<CartItem> list = cartItemMapper.selectList(new QueryWrapper<CartItem>().eq("cart_id", shoppingCart.getId())
+                .eq("user_id", shoppingCart.getUserId()));
+
 
         OrderMain orderMain = new OrderMain();
         orderMain.setUserId(userId);
         orderMain.setTotalPoint(shoppingCart.getTotalSelectedPoints());
-        orderMain.setStatus(OrderStatus.PENDING_PAYMENT);
+        orderMain.setStatus(0);
         orderMain.setCreateTime(LocalDateTime.now());
         orderMain.setUpdateTime(LocalDateTime.now());
 

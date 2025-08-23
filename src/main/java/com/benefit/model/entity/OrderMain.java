@@ -36,7 +36,7 @@ public class OrderMain implements Serializable {
     private BigDecimal totalPoint;
 
     //状态(0:待支付 1:已支付 2:已发货 3:已完成 4:已取消)
-    private OrderStatus status;
+    private Integer status;
 
     //付款日期
     private LocalDateTime payTime;

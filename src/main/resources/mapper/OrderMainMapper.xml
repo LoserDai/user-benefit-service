@@ -15,9 +15,7 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
 
     <!-- 处理 OrderStatus 枚举字段 -->
-    <result column="status" property="status" jdbcType="TINYINT"
-            javaType="com.benefit.model.enums.OrderStatus"
-            typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+    <result column="status" property="status" jdbcType="TINYINT"/>
 </resultMap>
 
 <!-- 通用查询列 -->
@@ -46,7 +44,7 @@
 
         <!-- 订单状态条件 -->
         <if test="request.status != null">
-            AND t1.status = #{request.status, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+            AND t1.status = #{request.status}
         </if>
 
         <!-- 订单ID条件 -->
