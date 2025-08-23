@@ -171,7 +171,7 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
                 .eq("user_id", cart.getUserId())
                 .eq("item_id", items.get(0).getItemId())
                 .eq("item_type", items.get(0).getItemType()));
-        if (!ObjectUtils.isNull()){
+        if (!ObjectUtils.isNull(cartItem)){
             cartItem.setQuantity(cartItem.getQuantity()+1);
             int count = cartItemMapper.updateById(cartItem);
             return count;
