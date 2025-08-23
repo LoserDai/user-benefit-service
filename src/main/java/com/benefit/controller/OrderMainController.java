@@ -6,6 +6,7 @@ import com.benefit.common.ResultUtils;
 import com.benefit.exception.BusinessException;
 import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
+import com.benefit.request.CancelOrderRequest;
 import com.benefit.request.OrderMainRequest;
 import com.benefit.service.OrderMainService;
 import com.benefit.vo.OrderMainVo;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.Map;
 
 import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
 
@@ -59,7 +62,7 @@ public class OrderMainController {
 
     @PostMapping("/cancelOrderMain")
     @ApiOperation("取消订单")
-    public BaseResponse<Integer> cancelOrderMain(@Param("cancelReason") String cancelReason,HttpServletRequest httpServletRequest) {
+    public BaseResponse<Integer> cancelOrderMain(@RequestBody CancelOrderRequest request, HttpServletRequest httpServletRequest) {
 
         Object userObj = httpServletRequest.getSession().getAttribute(USER_LOGIN_STATUS);
         User currentUser = (User) userObj;
@@ -68,8 +71,9 @@ public class OrderMainController {
         }
         //获取用户id
         long userId = currentUser.getId();
+        request.setUserId(userId);
 
-        int count = orderMainService.cancelOrderMain(userId,cancelReason);
+        int count = orderMainService.cancelOrderMain(request);
         if (count <= 0){
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"cancel OrderMain failed!");
         }
@@ -78,7 +82,7 @@ public class OrderMainController {
 
     @PostMapping("/payOrderMain")
     @ApiOperation("支付订单")
-    public BaseResponse<Integer> payOrderMain(HttpServletRequest httpServletRequest) {
+    public BaseResponse<Integer> payOrderMain(HttpServletRequest httpServletRequest, @Param("orderNo") String orderNo) {
 
         Object userObj = httpServletRequest.getSession().getAttribute(USER_LOGIN_STATUS);
         User currentUser = (User) userObj;
@@ -87,7 +91,7 @@ public class OrderMainController {
         }
         //获取用户id
         long userId = currentUser.getId();
-        int count = orderMainService.payOrderMain(userId);
+        int count = orderMainService.payOrderMain(userId,orderNo);
         if (count <= 0){
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"pay OrderMain failed!");
         }

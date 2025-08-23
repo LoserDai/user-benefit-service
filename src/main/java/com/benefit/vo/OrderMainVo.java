@@ -21,6 +21,10 @@ public class OrderMainVo implements Serializable {
 
     private Long userId;
 
+    private String  orderNo;
+
+    private String addressId;
+
     private Integer status;
 
     private Long orderId;

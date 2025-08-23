@@ -3,6 +3,7 @@ package com.benefit.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.benefit.common.PageResult;
 import com.benefit.model.entity.OrderMain;
+import com.benefit.request.CancelOrderRequest;
 import com.benefit.request.OrderMainRequest;
 import com.benefit.vo.OrderMainVo;
 
@@ -14,9 +15,9 @@ import com.benefit.vo.OrderMainVo;
 public interface OrderMainService extends IService<OrderMain> {
     int createOrderMain(long userId);
 
-    int cancelOrderMain(long userId,String cancelReason);
+    int cancelOrderMain(CancelOrderRequest request);
 
-    int payOrderMain(long userId);
+    int payOrderMain(long userId,String orderNo);
 
     PageResult<OrderMainVo> queryOrderMain(OrderMainRequest request);
 }

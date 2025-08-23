@@ -20,6 +20,8 @@ public class UserAddressVo implements Serializable {
 
     private static final long serialVersionUID = 3191241716373120793L;
 
+    private Long id;
+
     private Long userId;
 
     private String receiverName;

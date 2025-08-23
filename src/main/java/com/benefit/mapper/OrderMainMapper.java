@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Mapper
 public interface OrderMainMapper extends BaseMapper<OrderMain> {
-    OrderMain selectByUserId(long userId);
+    OrderMain selectByUserId(@Param("userId") long userId,@Param("orderNo") String orderNo);
 
     int cancelOrder(@Param("cancelReason") String cancelReason, @Param("id") Long id);
 

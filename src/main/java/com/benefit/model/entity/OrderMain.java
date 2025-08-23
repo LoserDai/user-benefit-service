@@ -27,6 +27,8 @@ public class OrderMain implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    private String  orderNo;
+
     private Long userId;
 
     //收货地址ID

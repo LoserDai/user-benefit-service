@@ -18,6 +18,8 @@ public class OrderMainRequest extends PageBaseRequest implements Serializable {
 
     private Long userId;
 
+    private String orderNo;
+
     private Integer status;
 
     private Long orderId;

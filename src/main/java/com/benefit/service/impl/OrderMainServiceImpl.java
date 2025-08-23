@@ -11,6 +11,7 @@ import com.benefit.model.entity.*;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.OrderStatus;
 import com.benefit.request.BenefitPointsRequest;
+import com.benefit.request.CancelOrderRequest;
 import com.benefit.request.OrderMainRequest;
 import com.benefit.service.BenefitPointsService;
 import com.benefit.service.OrderMainService;
@@ -71,6 +72,8 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
 
 
         OrderMain orderMain = new OrderMain();
+        Date date = new Date();
+        orderMain.setOrderNo("OrderID"+date.getTime()+"00"+userId);
         orderMain.setUserId(userId);
         orderMain.setTotalPoint(shoppingCart.getTotalSelectedPoints());
         orderMain.setStatus(0);
@@ -135,12 +138,12 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
     }
 
     @Override
-    public int cancelOrderMain(long userId,String cancelReason) {
+    public int cancelOrderMain(CancelOrderRequest request) {
 
         //获取该用户的订单
-        OrderMain orderMain = orderMainMapper.selectByUserId(userId);
+        OrderMain orderMain = orderMainMapper.selectByUserId(request.getUserId(),request.getOrderNo());
         //修改状态
-        int countCancel = orderMainMapper.cancelOrder(cancelReason,orderMain.getId());
+        int countCancel = orderMainMapper.cancelOrder(request.getCancelReason(),orderMain.getId());
         if (countCancel <= 0 ){
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"cancel failed");
         }
@@ -148,10 +151,10 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
     }
 
     @Override
-    public int payOrderMain(long userId) {
+    public int payOrderMain(long userId,String orderNo) {
 
         //获取未支付的订单
-        OrderMain orderMain = orderMainMapper.selectByUserId(userId);
+        OrderMain orderMain = orderMainMapper.selectByUserId(userId,orderNo);
         if (ObjectUtils.isNull(orderMain)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "The user has no unpaid orders");
         }

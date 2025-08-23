@@ -4,8 +4,7 @@
 
 
     <sql id="baseColumns">
-        id
-        , user_id, receiver_name, receiver_phone, status,
+        id, user_id, receiver_name, receiver_phone, status,
         province, city, district, detail_address, postal_code, create_time, update_time
     </sql>
 
