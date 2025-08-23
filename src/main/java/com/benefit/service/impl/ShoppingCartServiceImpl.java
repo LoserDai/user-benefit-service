@@ -13,6 +13,7 @@ import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.ShoppingCartRequest;
 import com.benefit.service.ShoppingCartService;
+import com.benefit.vo.ShoppingCartVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -67,13 +69,13 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
     * @Author: Allen
     */
     @Override
-    public ShoppingCart showShoppingCart(long userId) {
+    public  List<Map<String, Object>> showShoppingCart(long userId) {
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isNull(user)){
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"This user isn't exist!");
         }
 
-        return shoppingCartMapper.selectByUserId(userId);
+        return shoppingCartMapper.selectVoByUserId(userId);
     }
 
     @Override
@@ -106,6 +108,12 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
         }
 
         return insertCount;
+    }
+
+    @Override
+    public Integer clearShoppingCart(long userId) {
+        Integer count = shoppingCartMapper.clearShoppingCart(userId);
+        return count;
     }
 
     /**

@@ -3,9 +3,14 @@ package com.benefit.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.benefit.model.entity.ShoppingCart;
+import com.benefit.vo.ShoppingCartVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Allen
@@ -13,6 +18,9 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface ShoppingCartMapper extends BaseMapper<ShoppingCart> {
+
+
+    List<Map<String, Object>> selectVoByUserId(@Param("userId") Long userId);
 
     @Select({
             "<script>",
@@ -24,4 +32,7 @@ public interface ShoppingCartMapper extends BaseMapper<ShoppingCart> {
             "</script>"
     })
     ShoppingCart selectByUserId(@Param("userId") Long userId);
+
+
+    Integer clearShoppingCart(@Param("userId") long userId);
 }

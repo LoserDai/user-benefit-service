@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.benefit.mapper.ShoppingCartMapper">
+
+
+    <select id="selectVoByUserId" resultType="java.util.Map">
+        SELECT
+        t1.id as cart_id,
+        t2.id,
+        t1.user_id,
+        t1.total_selected_points,
+        t2.quantity,
+        t2.item_name,
+        t2.item_image,
+        t2.item_type,
+        t2.point_price,
+        t2.create_time
+        FROM t_shopping_cart t1
+        LEFT JOIN t_cart_item t2 ON t2.cart_id = t1.id AND t2.user_id = t1.user_id
+        <where>
+            1=1
+            <if test="userId != null">
+                AND t1.user_id = #{userId}
+            </if>
+            AND t1.status = 1 AND t2.quantity > 0
+        </where>
+        ORDER BY t2.create_time DESC
+    </select>
+
+
+    <update id="clearShoppingCart">
+        UPDATE t_shopping_cart
+        SET status = 0
+        WHERE user_id = #{userId}
+    </update>
+</mapper>

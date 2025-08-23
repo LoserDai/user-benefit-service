@@ -10,6 +10,7 @@ import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.ShoppingCartRequest;
 import com.benefit.service.ShoppingCartService;
+import com.benefit.vo.ShoppingCartVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
+import java.util.Map;
 
 import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
 
@@ -65,7 +69,7 @@ public class ShoppingCartController {
 
     @PostMapping("/showShoppingCart")
     @ApiOperation("查看购物车")
-    public BaseResponse<ShoppingCart> showShoppingCart(HttpServletRequest request){
+    public BaseResponse<List<Map<String, Object>>> showShoppingCart(HttpServletRequest request){
 
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
         User currentUser = (User) userObj;
@@ -74,11 +78,8 @@ public class ShoppingCartController {
         }
         long userId = currentUser.getId();
 
-        ShoppingCart shoppingCart = shoppingCartService.showShoppingCart(userId);
-        if (ObjectUtils.isNull(shoppingCart)) {
-            return null;
-        }
-        return ResultUtils.success(shoppingCart);
+        List<Map<String, Object>> vo = shoppingCartService.showShoppingCart(userId);
+        return ResultUtils.success(vo);
     }
 
     @PostMapping("/updateShoppingCart")
@@ -96,4 +97,20 @@ public class ShoppingCartController {
 
         return ResultUtils.success(count);
     }
+
+    @PostMapping("/clearShoppingCart")
+    @ApiOperation("清空购物车")
+    public BaseResponse<Integer> clearShoppingCart(HttpServletRequest httpServletRequest){
+
+        Object userObj = httpServletRequest.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        long userId = currentUser.getId();
+        Integer count = shoppingCartService.clearShoppingCart(userId);
+
+        return ResultUtils.success(count);
+    }
+
 }

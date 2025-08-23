@@ -2,6 +2,8 @@ package com.benefit.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.benefit.model.entity.CartItem;
+import com.benefit.request.CartItemRequest;
+import com.benefit.request.ShoppingCartRequest;
 
 /**
  * @Author Allen
@@ -9,4 +11,5 @@ import com.benefit.model.entity.CartItem;
  * @Description
  */
 public interface CartItemService extends IService<CartItem> {
+    Integer deletedShoppingCart(long userId, Integer id);
 }

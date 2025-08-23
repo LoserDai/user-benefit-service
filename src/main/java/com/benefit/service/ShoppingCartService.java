@@ -3,6 +3,10 @@ package com.benefit.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.benefit.model.entity.ShoppingCart;
 import com.benefit.request.ShoppingCartRequest;
+import com.benefit.vo.ShoppingCartVo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author Allen
@@ -12,7 +16,9 @@ import com.benefit.request.ShoppingCartRequest;
 public interface ShoppingCartService extends IService<ShoppingCart> {
     Integer createShoppingCart(ShoppingCartRequest request);
 
-    ShoppingCart showShoppingCart(long userId);
+    List<Map<String, Object>> showShoppingCart(long userId);
 
     Integer updateShoppingCart(ShoppingCartRequest request);
+
+    Integer clearShoppingCart(long userId);
 }
