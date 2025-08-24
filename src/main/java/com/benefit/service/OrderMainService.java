@@ -13,7 +13,7 @@ import com.benefit.vo.OrderMainVo;
  * @Description
  */
 public interface OrderMainService extends IService<OrderMain> {
-    int createOrderMain(long userId);
+    int createOrderMain(long userId,long addressId);
 
     int cancelOrderMain(CancelOrderRequest request);
 

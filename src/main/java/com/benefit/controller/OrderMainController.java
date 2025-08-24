@@ -1,5 +1,6 @@
 package com.benefit.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.benefit.common.BaseResponse;
 import com.benefit.common.PageResult;
 import com.benefit.common.ResultUtils;
@@ -44,16 +45,19 @@ public class OrderMainController {
 
     @PostMapping("/createOrderMain")
     @ApiOperation("创建订单")
-    public BaseResponse<Integer> createOrderMain(HttpServletRequest httpServletRequest) {
+    public BaseResponse<Integer> createOrderMain(HttpServletRequest httpServletRequest , @Param("addressId") long addressId) {
 
         Object userObj = httpServletRequest.getSession().getAttribute(USER_LOGIN_STATUS);
         User currentUser = (User) userObj;
         if (currentUser == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN);
         }
+        if (ObjectUtils.isNull(addressId)){
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"address can't be null");
+        }
         //获取用户id
         long userId = currentUser.getId();
-        int count = orderMainService.createOrderMain(userId);
+        int count = orderMainService.createOrderMain(userId,addressId);
         if (count <= 0){
             return ResultUtils.error(ErrorCode.SYSTEM_ERROR,"create OrderMain failed!");
         }

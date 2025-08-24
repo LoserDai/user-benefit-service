@@ -58,7 +58,7 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
     private CartItemMapper cartItemMapper;
 
     @Override
-    public int createOrderMain(long userId) {
+    public int createOrderMain(long userId,long addressId) {
 
         //获取生效的购物车
         ShoppingCart shoppingCart = shoppingCartMapper.selectByUserId(userId);
@@ -72,6 +72,7 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
 
 
         OrderMain orderMain = new OrderMain();
+        orderMain.setAddressId(addressId);
         Date date = new Date();
         orderMain.setOrderNo("OrderID"+date.getTime()+"00"+userId);
         orderMain.setUserId(userId);
