@@ -27,4 +27,7 @@ public interface OrderMainMapper extends BaseMapper<OrderMain> {
 
     List<OrderDashVo> getOrderCount();
 
+    List<OrderMain> checkAndCloseExpireOrder();
+
+    Integer batchCancelOrder(List<OrderMain> list);
 }

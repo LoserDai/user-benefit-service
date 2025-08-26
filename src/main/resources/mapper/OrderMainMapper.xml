@@ -100,14 +100,34 @@
     WHERE id = #{id,jdbcType=BIGINT} AND status = 0 <!-- 只有待支付订单才能取消 -->
 </update>
 
-    <select id="getOrderCount" resultType="com.benefit.vo.OrderDashVo">
-        SELECT
-            DATE(create_time) AS orderDate,
-            COUNT(*) AS orderCount
-        FROM t_order_main
-        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-        GROUP BY orderDate
-        ORDER BY orderDate DESC
-    </select>
+<select id="getOrderCount" resultType="com.benefit.vo.OrderDashVo">
+    SELECT
+        DATE(create_time) AS orderDate,
+        COUNT(*) AS orderCount
+    FROM t_order_main
+    WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+    GROUP BY orderDate
+    ORDER BY orderDate DESC
+</select>
+
+<select id="checkAndCloseExpireOrder" resultType="com.benefit.model.entity.OrderMain">
+    SELECT *
+    FROM t_order_main
+    WHERE status = 0
+      AND create_time <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL 24 HOUR)
+    ORDER BY create_time ASC
+</select>
+
+<update id="batchCancelOrder">
+    UPDATE t_order_main
+    SET
+    status = 4,
+    update_time = NOW(),
+    cancel_reason = 'TIMEOUT CANCEL'
+    WHERE id IN
+    <foreach collection="list" item="order" open="(" separator="," close=")">
+        #{order.id}
+    </foreach>
+</update>
 
 </mapper>
