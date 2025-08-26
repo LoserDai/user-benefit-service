@@ -5,7 +5,10 @@ import com.benefit.common.PageResult;
 import com.benefit.model.entity.OrderMain;
 import com.benefit.request.CancelOrderRequest;
 import com.benefit.request.OrderMainRequest;
+import com.benefit.vo.OrderDashVo;
 import com.benefit.vo.OrderMainVo;
+
+import java.util.List;
 
 /**
  * @Author Allen
@@ -20,4 +23,6 @@ public interface OrderMainService extends IService<OrderMain> {
     int payOrderMain(long userId,String orderNo);
 
     PageResult<OrderMainVo> queryOrderMain(OrderMainRequest request);
+
+    List<OrderDashVo> getOrderCount();
 }

@@ -2,7 +2,10 @@ package com.benefit.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.benefit.model.entity.User;
+import com.benefit.vo.UserDashVo;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @Author feng.dai
@@ -12,6 +15,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-    //所有的CRUD均已完成
-    //不用再跟以前一样配置一堆文件
+    List<UserDashVo> getUserRegisterCount();
 }

@@ -15,6 +15,7 @@ import com.benefit.request.CancelOrderRequest;
 import com.benefit.request.OrderMainRequest;
 import com.benefit.service.BenefitPointsService;
 import com.benefit.service.OrderMainService;
+import com.benefit.vo.OrderDashVo;
 import com.benefit.vo.OrderMainVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -205,5 +206,10 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
                 page.getTotal(),
                 (int) page.getCurrent(),
                 (int) page.getSize());
+    }
+
+    @Override
+    public List<OrderDashVo> getOrderCount() {
+        return orderMainMapper.getOrderCount();
     }
 }

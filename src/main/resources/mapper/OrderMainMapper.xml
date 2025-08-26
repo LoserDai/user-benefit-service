@@ -100,4 +100,14 @@
     WHERE id = #{id,jdbcType=BIGINT} AND status = 0 <!-- 只有待支付订单才能取消 -->
 </update>
 
+    <select id="getOrderCount" resultType="com.benefit.vo.OrderDashVo">
+        SELECT
+            DATE(create_time) AS orderDate,
+            COUNT(*) AS orderCount
+        FROM t_order_main
+        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        GROUP BY orderDate
+        ORDER BY orderDate DESC
+    </select>
+
 </mapper>

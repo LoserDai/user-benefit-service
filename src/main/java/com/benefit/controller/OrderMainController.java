@@ -10,20 +10,19 @@ import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.CancelOrderRequest;
 import com.benefit.request.OrderMainRequest;
 import com.benefit.service.OrderMainService;
+import com.benefit.service.UserService;
+import com.benefit.vo.OrderDashVo;
 import com.benefit.vo.OrderMainVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.Map;
+import java.util.List;
 
 import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
 
@@ -41,6 +40,9 @@ public class OrderMainController {
 
     @Resource
     private OrderMainService orderMainService;
+
+    @Resource
+    private UserService userService;
 
 
     @PostMapping("/createOrderMain")
@@ -108,5 +110,23 @@ public class OrderMainController {
     public BaseResponse<PageResult<OrderMainVo>> queryOrderMain(@RequestBody OrderMainRequest request) {
         PageResult<OrderMainVo> pageResult = orderMainService.queryOrderMain(request);
         return ResultUtils.success(pageResult);
+    }
+
+    @ApiOperation("orderDashboard")
+    @GetMapping("/getOrderCount")
+    public BaseResponse<List<OrderDashVo>> getOrderCount(HttpServletRequest request) {
+
+        if (!userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        List<OrderDashVo> vo = orderMainService.getOrderCount();
+
+        return ResultUtils.success(vo);
     }
 }

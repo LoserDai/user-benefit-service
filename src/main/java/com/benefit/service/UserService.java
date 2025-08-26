@@ -2,6 +2,8 @@ package com.benefit.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.benefit.model.entity.User;
+import com.benefit.vo.OrderDashVo;
+import com.benefit.vo.UserDashVo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -98,4 +100,7 @@ public interface UserService extends IService<User> {
     int updateUserById(User user,User loginUser,HttpServletRequest request);
 
     Map<Long, String> getUserAccountMap(Set<Long> userIds);
+
+    List<UserDashVo> getUserRegisterCount();
+
 }

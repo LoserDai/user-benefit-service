@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.benefit.model.entity.OrderMain;
 import com.benefit.request.OrderMainRequest;
+import com.benefit.vo.OrderDashVo;
 import com.benefit.vo.OrderMainVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -23,4 +24,7 @@ public interface OrderMainMapper extends BaseMapper<OrderMain> {
     int updatePayTime(@Param("id")Long id);
 
     List<OrderMainVo> pageQuery(Page<OrderMainVo> page, OrderMainRequest request);
+
+    List<OrderDashVo> getOrderCount();
+
 }

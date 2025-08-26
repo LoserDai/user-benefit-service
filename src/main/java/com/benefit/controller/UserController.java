@@ -9,6 +9,7 @@ import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.UserLoginRequest;
 import com.benefit.request.UserRegisterRequest;
 import com.benefit.service.UserService;
+import com.benefit.vo.UserDashVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -184,5 +185,23 @@ public class UserController {
             return ResultUtils.success(false);
         }
         return ResultUtils.error(ErrorCode.IS_REGISTER);
+    }
+
+    @ApiOperation("dashboard")
+    @GetMapping("/getUserRegisterCount")
+    public BaseResponse<List<UserDashVo>> getUserRegisterCount(HttpServletRequest request) {
+
+        if (!userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        List<UserDashVo> vo = userService.getUserRegisterCount();
+
+        return ResultUtils.success(vo);
     }
 }

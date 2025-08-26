@@ -11,6 +11,7 @@ import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.Status;
 import com.benefit.service.UserService;
+import com.benefit.vo.UserDashVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -333,5 +334,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             map.put(user.getId(),user.getAccount());
         });
         return map;
+    }
+
+    @Override
+    public List<UserDashVo> getUserRegisterCount() {
+
+        return userMapper.getUserRegisterCount();
     }
 }
