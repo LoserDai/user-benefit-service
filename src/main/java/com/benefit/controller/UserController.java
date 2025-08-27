@@ -204,4 +204,23 @@ public class UserController {
 
         return ResultUtils.success(vo);
     }
+
+    @ApiOperation("Admin登录接口")
+    @PostMapping("/adminLogin")
+    public BaseResponse<User> adminLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+        if (userLoginRequest == null) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
+        }
+        String account = userLoginRequest.getAccount();
+        String password = userLoginRequest.getPassword();
+        if (StringUtils.isAnyBlank(account, password)) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
+        }
+        User user = userService.adminLogin(account, password, request);
+        log.info("user login result:{}", "userName: " + user);
+        if (ObjectUtils.isEmpty(user)){
+            return ResultUtils.error(ErrorCode.NOT_ALLOWED_LOGIN);
+        }
+        return ResultUtils.success(user);
+    }
 }

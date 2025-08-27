@@ -341,4 +341,47 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         return userMapper.getUserRegisterCount();
     }
+
+    @Override
+    public User adminLogin(String account, String password, HttpServletRequest request) {
+        // 1. 校验
+        if (StringUtils.isAnyBlank(account, password)) {
+            return null;
+        }
+        if (account.length() < 4 || account.length() > 16) {
+            return null;
+        }
+        if (password.length() < 8 || password.length() > 18) {
+            return null;
+        }
+        // 账户不能包含特殊字符
+        String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+        Matcher matcher = Pattern.compile(validPattern).matcher(account);
+        if (matcher.find()) {
+            return null;
+        }
+        // 2. 加密
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+        // 查询管理员是否存在
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("account", account);
+        queryWrapper.eq("password", encryptPassword);
+        queryWrapper.eq("user_role",1);
+        User user = userMapper.selectOne(queryWrapper);
+        //判断用户是否已注销
+        if (Status.DELETED == user.getStatus() || Status.EXPIRED == user.getStatus()){
+            log.info("user not allow to login,status is {}",user.getStatus());
+            return null;
+        }
+        // 用户不存在
+        if (ObjectUtils.isEmpty(user)) {
+            log.info("user login failed, account cannot match password");
+            return null;
+        }
+        // 3. 用户脱敏
+        User safetyUser = getSafetyUser(user);
+        // 4. 记录用户的登录态
+        request.getSession().setAttribute(USER_LOGIN_STATUS, safetyUser);
+        return safetyUser;
+    }
 }

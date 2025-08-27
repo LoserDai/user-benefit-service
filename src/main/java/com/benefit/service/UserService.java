@@ -103,4 +103,5 @@ public interface UserService extends IService<User> {
 
     List<UserDashVo> getUserRegisterCount();
 
+    User adminLogin(String account, String password, HttpServletRequest request);
 }
