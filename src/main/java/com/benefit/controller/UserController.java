@@ -151,12 +151,12 @@ public class UserController {
         return ResultUtils.success(list);
     }
 
-    /**
-     * 删除用户
-     * @param user
-     * @param request
-     * @return
-     */
+/**
+* @Description: 删除接口
+* @Param: [user, request]
+* @Return: com.benefit.common.BaseResponse<java.lang.Integer>
+* @Author: Allen
+*/
     @ApiOperation("删除接口")
     @PostMapping("/delete")
     public BaseResponse<Integer> deleteUser(@RequestBody User user, HttpServletRequest request) {
@@ -172,6 +172,12 @@ public class UserController {
         return ResultUtils.success(deletedId);
     }
 
+    /**
+    * @Description: 查询用户名是否已注册
+    * @Param: [account]
+    * @Return: com.benefit.common.BaseResponse
+    * @Author: Allen
+    */
     @ApiOperation("查询用户名是否已注册")
     @GetMapping("/isRegister")
     public BaseResponse isRegister(@RequestParam String account) {
@@ -187,6 +193,13 @@ public class UserController {
         return ResultUtils.error(ErrorCode.IS_REGISTER);
     }
 
+
+    /**
+    * @Description: 数据面板
+    * @Param: [request]
+    * @Return: com.benefit.common.BaseResponse<java.util.List<com.benefit.vo.UserDashVo>>
+    * @Author: Allen
+    */
     @ApiOperation("dashboard")
     @GetMapping("/getUserRegisterCount")
     public BaseResponse<List<UserDashVo>> getUserRegisterCount(HttpServletRequest request) {
@@ -205,6 +218,12 @@ public class UserController {
         return ResultUtils.success(vo);
     }
 
+    /**
+    * @Description: admin用户登录
+    * @Param: [userLoginRequest, request]
+    * @Return: com.benefit.common.BaseResponse<com.benefit.model.entity.User>
+    * @Author: Allen
+    */
     @ApiOperation("Admin登录接口")
     @PostMapping("/adminLogin")
     public BaseResponse<User> adminLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
@@ -214,7 +233,7 @@ public class UserController {
         String account = userLoginRequest.getAccount();
         String password = userLoginRequest.getPassword();
         if (StringUtils.isAnyBlank(account, password)) {
-            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
+            return ResultUtils.error(ErrorCode.ACCOUNT_NOT_FOUND);
         }
         User user = userService.adminLogin(account, password, request);
         log.info("user login result:{}", "userName: " + user);

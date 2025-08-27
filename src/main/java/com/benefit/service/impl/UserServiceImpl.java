@@ -140,14 +140,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("account", account);
         queryWrapper.eq("password", encryptPassword);
         User user = userMapper.selectOne(queryWrapper);
-        //判断用户是否已注销
-        if (Status.DELETED == user.getStatus() || Status.EXPIRED == user.getStatus()){
-            log.info("user not allow to login,status is {}",user.getStatus());
-            return null;
-        }
         // 用户不存在
         if (ObjectUtils.isEmpty(user)) {
             log.info("user login failed, account cannot match password");
+            return null;
+        }
+        //判断用户是否已注销
+        if (Status.DELETED == user.getStatus() || Status.EXPIRED == user.getStatus()){
+            log.info("user not allow to login,status is {}",user.getStatus());
             return null;
         }
         // 3. 用户脱敏
@@ -368,14 +368,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("password", encryptPassword);
         queryWrapper.eq("user_role",1);
         User user = userMapper.selectOne(queryWrapper);
-        //判断用户是否已注销
-        if (Status.DELETED == user.getStatus() || Status.EXPIRED == user.getStatus()){
-            log.info("user not allow to login,status is {}",user.getStatus());
-            return null;
-        }
         // 用户不存在
         if (ObjectUtils.isEmpty(user)) {
             log.info("user login failed, account cannot match password");
+            return null;
+        }
+        //判断用户是否已注销
+        if (Status.DELETED == user.getStatus() || Status.EXPIRED == user.getStatus()){
+            log.info("user not allow to login,status is {}",user.getStatus());
             return null;
         }
         // 3. 用户脱敏
