@@ -12,4 +12,9 @@
         ORDER BY registerDate DESC
     </select>
 
+    <select id="getUserCount" resultType="java.lang.Integer">
+        select count(1)
+        from user
+    </select>
+
 </mapper>

@@ -8,7 +8,10 @@ import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.UserLoginRequest;
 import com.benefit.request.UserRegisterRequest;
+import com.benefit.service.BenefitProductService;
+import com.benefit.service.OrderMainService;
 import com.benefit.service.UserService;
+import com.benefit.vo.DashVo;
 import com.benefit.vo.UserDashVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.benefit.constant.UserConstant.USER_LOGIN_STATUS;
@@ -38,6 +43,12 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private BenefitProductService benefitProductService;
+
+    @Resource
+    private OrderMainService orderMainService;
 
 
     /**
@@ -241,5 +252,33 @@ public class UserController {
             return ResultUtils.error(ErrorCode.NOT_ALLOWED_LOGIN);
         }
         return ResultUtils.success(user);
+    }
+
+
+    @ApiOperation("dashboard获取总数")
+    @PostMapping("/getCount")
+    public BaseResponse<DashVo> getCount(HttpServletRequest request){
+        if (!userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        Integer userCount = userService.getUserCount();
+        Integer productCount = benefitProductService.getProductCount();
+        Map<String, Object> map = orderMainService.getOrderMainCount();
+        Object orderMainCount = map.get("orderMainCount");
+        Object totalPoints = map.get("totalPoints");
+
+        DashVo vo = new DashVo();
+        vo.setUserCount(userCount);
+        vo.setProductCount(productCount);
+        vo.setOrderMainCount(orderMainCount);
+        vo.setOrderPointsCount(totalPoints);
+
+        return ResultUtils.success(vo);
     }
 }

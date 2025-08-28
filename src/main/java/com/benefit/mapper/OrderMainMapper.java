@@ -8,8 +8,11 @@ import com.benefit.vo.OrderDashVo;
 import com.benefit.vo.OrderMainVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Allen
@@ -30,4 +33,7 @@ public interface OrderMainMapper extends BaseMapper<OrderMain> {
     List<OrderMain> checkAndCloseExpireOrder();
 
     Integer batchCancelOrder(List<OrderMain> list);
+
+    @Select("SELECT COUNT(1) as orderMainCount, SUM(total_point) as totalPoints FROM t_order_main")
+    Map<String, Object> getOrderMainCount();
 }

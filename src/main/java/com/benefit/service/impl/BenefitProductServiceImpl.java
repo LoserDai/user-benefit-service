@@ -156,6 +156,11 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
             return product;
     }
 
+    @Override
+    public Integer getProductCount() {
+        return productMapper.getProductCount();
+    }
+
     private QueryWrapper<BenefitProduct> buildQueryWrapper(BenefitProductRequest request) {
         QueryWrapper<BenefitProduct> queryWrapper = new QueryWrapper<>();
 

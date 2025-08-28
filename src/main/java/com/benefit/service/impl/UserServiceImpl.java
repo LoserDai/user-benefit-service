@@ -384,4 +384,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         request.getSession().setAttribute(USER_LOGIN_STATUS, safetyUser);
         return safetyUser;
     }
+
+    @Override
+    public Integer getUserCount() {
+        return userMapper.getUserCount();
+    }
 }

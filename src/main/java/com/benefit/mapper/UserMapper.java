@@ -16,4 +16,7 @@ import java.util.List;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
     List<UserDashVo> getUserRegisterCount();
+
+    Integer getUserCount();
+
 }

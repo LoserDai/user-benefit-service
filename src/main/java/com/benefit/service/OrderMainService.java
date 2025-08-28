@@ -8,7 +8,9 @@ import com.benefit.request.OrderMainRequest;
 import com.benefit.vo.OrderDashVo;
 import com.benefit.vo.OrderMainVo;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author Allen
@@ -25,4 +27,6 @@ public interface OrderMainService extends IService<OrderMain> {
     PageResult<OrderMainVo> queryOrderMain(OrderMainRequest request);
 
     List<OrderDashVo> getOrderCount();
+
+    Map<String, Object> getOrderMainCount();
 }

@@ -212,4 +212,9 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
     public List<OrderDashVo> getOrderCount() {
         return orderMainMapper.getOrderCount();
     }
+
+    @Override
+    public Map<String, Object> getOrderMainCount() {
+        return orderMainMapper.getOrderMainCount();
+    }
 }
