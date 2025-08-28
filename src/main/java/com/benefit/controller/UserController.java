@@ -254,6 +254,12 @@ public class UserController {
     }
 
 
+    /**
+    * @Description: dashboard获取总数
+    * @Param: [request]
+    * @Return: com.benefit.common.BaseResponse<com.benefit.vo.DashVo>
+    * @Author: Allen
+    */
     @ApiOperation("dashboard获取总数")
     @PostMapping("/getCount")
     public BaseResponse<DashVo> getCount(HttpServletRequest request) {
@@ -273,6 +279,13 @@ public class UserController {
         return ResultUtils.success(vo);
     }
 
+
+    /**
+    * @Description: 分页查询user接口
+    * @Param: [userRequest, request]
+    * @Return: com.benefit.common.BaseResponse<com.benefit.common.PageResult<com.benefit.vo.UserVo>>
+    * @Author: Allen
+    */
     @ApiOperation("分页查询user接口")
     @PostMapping("/pageQueryUser")
     public BaseResponse<PageResult<UserVo>> pageQueryUser(@RequestBody(required = false) UserRequest userRequest, HttpServletRequest request) {
@@ -291,6 +304,12 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    /**
+    * @Description: 校验用户是否管理员
+    * @Param: [request]
+    * @Return: void
+    * @Author: Allen
+    */
     private void isAdmin(HttpServletRequest request) {
         if (!userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH);
