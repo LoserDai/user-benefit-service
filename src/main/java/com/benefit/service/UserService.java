@@ -1,9 +1,12 @@
 package com.benefit.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.benefit.common.PageResult;
 import com.benefit.model.entity.User;
+import com.benefit.request.UserRequest;
 import com.benefit.vo.OrderDashVo;
 import com.benefit.vo.UserDashVo;
+import com.benefit.vo.UserVo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -106,4 +109,6 @@ public interface UserService extends IService<User> {
     User adminLogin(String account, String password, HttpServletRequest request);
 
     Integer getUserCount();
+
+    PageResult<UserVo> pageQueryUser(UserRequest userRequest);
 }

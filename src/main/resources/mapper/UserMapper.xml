@@ -2,6 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.benefit.mapper.UserMapper">
 
+    <sql id="baseColumns">
+            id,account, gender, email, phone, status, user_role, create_time
+    </sql>
+    <sql id="dynamicWhere">
+        <where>
+            <if test="request.account != null and request.account != ''">
+                AND account = #{request.account}
+            </if>
+            <if test="request.gender != null">
+                AND gender = #{request.gender}
+            </if>
+            <if test="request.email != null and request.email != ''">
+                AND email = #{request.email}
+            </if>
+            <if test="request.phone != null and request.phone != ''">
+                AND phone = #{request.phone}
+            </if>
+            <if test="request.status != null and request.status != ''">
+                AND status = #{request.status}
+            </if>
+            <if test="request.userRole != null and request.userRole != ''">
+                AND user_role = #{request.userRole}
+            </if>
+        </where>
+    </sql>
+
     <select id="getUserRegisterCount" resultType="com.benefit.vo.UserDashVo">
         SELECT
             DATE(create_time) AS registerDate,
@@ -15,6 +41,14 @@
     <select id="getUserCount" resultType="java.lang.Integer">
         select count(1)
         from user
+    </select>
+
+    <select id="pageQueryUser" resultType="com.benefit.vo.UserVo">
+        select <include refid="baseColumns"/>
+        from user
+        <include refid="dynamicWhere"/>
+        <!-- 默认排序：默认地址优先，按更新时间倒序 -->
+        ORDER BY create_time DESC
     </select>
 
 </mapper>

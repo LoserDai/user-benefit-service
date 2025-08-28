@@ -1,7 +1,9 @@
 package com.benefit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.benefit.common.PageResult;
 import com.benefit.constant.UserConstant;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.BenefitPointsMapper;
@@ -10,8 +12,12 @@ import com.benefit.model.entity.BenefitPoints;
 import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.model.enums.Status;
+import com.benefit.request.UserAddressRequest;
+import com.benefit.request.UserRequest;
 import com.benefit.service.UserService;
+import com.benefit.vo.UserAddressVo;
 import com.benefit.vo.UserDashVo;
+import com.benefit.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -21,10 +27,7 @@ import org.springframework.util.ObjectUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -305,7 +308,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setStatus(Status.DELETED);
 
         //只有管理员才能删除 且被删的不是自己
-        if (isAdmin(loginUser) && id.equals(loginUser.getId())) {
+        if (isAdmin(loginUser) && !id.equals(loginUser.getId())) {
             return userMapper.updateById(user);
         }else if (isAdmin(loginUser) && id.equals(loginUser.getId())){
             //自己删除自己，删除后退出登录
@@ -388,5 +391,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Integer getUserCount() {
         return userMapper.getUserCount();
+    }
+
+    @Override
+    public PageResult<UserVo> pageQueryUser(UserRequest userRequest) {
+        int pageNum = Optional.ofNullable(userRequest)
+                .map(UserRequest::getPageNum)
+                .filter(num -> num > 0)
+                .orElse(1);
+
+        int pageSize = Optional.ofNullable(userRequest)
+                .map(UserRequest::getPageSize)
+                .filter(size -> size > 0 && size <= 500)
+                .orElse(10);
+
+        Page<User> page = new Page<>(pageNum, pageSize);
+
+        List<UserVo>list = userMapper.pageQueryUser(page,userRequest);
+        return new PageResult<>(
+                list,
+                page.getTotal(),
+                (int) page.getCurrent(),
+                (int) page.getSize()
+        );
     }
 }

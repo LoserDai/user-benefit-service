@@ -2,17 +2,20 @@ package com.benefit.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.benefit.common.BaseResponse;
+import com.benefit.common.PageResult;
 import com.benefit.common.ResultUtils;
 import com.benefit.exception.BusinessException;
 import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.UserLoginRequest;
 import com.benefit.request.UserRegisterRequest;
+import com.benefit.request.UserRequest;
 import com.benefit.service.BenefitProductService;
 import com.benefit.service.OrderMainService;
 import com.benefit.service.UserService;
 import com.benefit.vo.DashVo;
 import com.benefit.vo.UserDashVo;
+import com.benefit.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +56,7 @@ public class UserController {
 
     /**
      * 注册
+     *
      * @param userRegisterRequest
      * @return
      */
@@ -76,6 +80,7 @@ public class UserController {
 
     /**
      * 更新用户信息
+     *
      * @param user
      * @param request
      * @return
@@ -104,7 +109,7 @@ public class UserController {
         }
         User user = userService.userLogin(account, password, request);
         log.info("user login result:{}", "userName: " + user);
-        if (ObjectUtils.isEmpty(user)){
+        if (ObjectUtils.isEmpty(user)) {
             return ResultUtils.error(ErrorCode.NOT_ALLOWED_LOGIN);
         }
         return ResultUtils.success(user);
@@ -122,6 +127,7 @@ public class UserController {
 
     /**
      * 获取当前用户
+     *
      * @param request
      * @return
      */
@@ -143,6 +149,7 @@ public class UserController {
 
     /**
      * 查询用户
+     *
      * @param account
      * @param request
      * @return
@@ -162,12 +169,12 @@ public class UserController {
         return ResultUtils.success(list);
     }
 
-/**
-* @Description: 删除接口
-* @Param: [user, request]
-* @Return: com.benefit.common.BaseResponse<java.lang.Integer>
-* @Author: Allen
-*/
+    /**
+     * @Description: 删除接口
+     * @Param: [user, request]
+     * @Return: com.benefit.common.BaseResponse<java.lang.Integer>
+     * @Author: Allen
+     */
     @ApiOperation("删除接口")
     @PostMapping("/delete")
     public BaseResponse<Integer> deleteUser(@RequestBody User user, HttpServletRequest request) {
@@ -179,16 +186,16 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User loginUser = userService.getLoginUser(request);
-        int deletedId = userService.updateUserById(user,loginUser,request);
+        int deletedId = userService.updateUserById(user, loginUser, request);
         return ResultUtils.success(deletedId);
     }
 
     /**
-    * @Description: 查询用户名是否已注册
-    * @Param: [account]
-    * @Return: com.benefit.common.BaseResponse
-    * @Author: Allen
-    */
+     * @Description: 查询用户名是否已注册
+     * @Param: [account]
+     * @Return: com.benefit.common.BaseResponse
+     * @Author: Allen
+     */
     @ApiOperation("查询用户名是否已注册")
     @GetMapping("/isRegister")
     public BaseResponse isRegister(@RequestParam String account) {
@@ -197,7 +204,7 @@ public class UserController {
             queryWrapper.eq("account", account);
         }
         User user = userService.getOne(queryWrapper);
-        if(user == null) {
+        if (user == null) {
             //没查到,可以注册
             return ResultUtils.success(false);
         }
@@ -206,35 +213,27 @@ public class UserController {
 
 
     /**
-    * @Description: 数据面板
-    * @Param: [request]
-    * @Return: com.benefit.common.BaseResponse<java.util.List<com.benefit.vo.UserDashVo>>
-    * @Author: Allen
-    */
+     * @Description: 数据面板
+     * @Param: [request]
+     * @Return: com.benefit.common.BaseResponse<java.util.List < com.benefit.vo.UserDashVo>>
+     * @Author: Allen
+     */
     @ApiOperation("dashboard")
     @GetMapping("/getUserRegisterCount")
     public BaseResponse<List<UserDashVo>> getUserRegisterCount(HttpServletRequest request) {
 
-        if (!userService.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH);
-        }
-
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
-        User currentUser = (User) userObj;
-        if (currentUser == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN);
-        }
+        isAdmin(request);
         List<UserDashVo> vo = userService.getUserRegisterCount();
 
         return ResultUtils.success(vo);
     }
 
     /**
-    * @Description: admin用户登录
-    * @Param: [userLoginRequest, request]
-    * @Return: com.benefit.common.BaseResponse<com.benefit.model.entity.User>
-    * @Author: Allen
-    */
+     * @Description: admin用户登录
+     * @Param: [userLoginRequest, request]
+     * @Return: com.benefit.common.BaseResponse<com.benefit.model.entity.User>
+     * @Author: Allen
+     */
     @ApiOperation("Admin登录接口")
     @PostMapping("/adminLogin")
     public BaseResponse<User> adminLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
@@ -248,7 +247,7 @@ public class UserController {
         }
         User user = userService.adminLogin(account, password, request);
         log.info("user login result:{}", "userName: " + user);
-        if (ObjectUtils.isEmpty(user)){
+        if (ObjectUtils.isEmpty(user)) {
             return ResultUtils.error(ErrorCode.NOT_ALLOWED_LOGIN);
         }
         return ResultUtils.success(user);
@@ -257,16 +256,8 @@ public class UserController {
 
     @ApiOperation("dashboard获取总数")
     @PostMapping("/getCount")
-    public BaseResponse<DashVo> getCount(HttpServletRequest request){
-        if (!userService.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH);
-        }
-
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
-        User currentUser = (User) userObj;
-        if (currentUser == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN);
-        }
+    public BaseResponse<DashVo> getCount(HttpServletRequest request) {
+        isAdmin(request);
         Integer userCount = userService.getUserCount();
         Integer productCount = benefitProductService.getProductCount();
         Map<String, Object> map = orderMainService.getOrderMainCount();
@@ -281,4 +272,35 @@ public class UserController {
 
         return ResultUtils.success(vo);
     }
+
+    @ApiOperation("分页查询user接口")
+    @PostMapping("/pageQueryUser")
+    public BaseResponse<PageResult<UserVo>> pageQueryUser(@RequestBody(required = false) UserRequest userRequest, HttpServletRequest request) {
+        isAdmin(request);
+
+        // 参数校验
+        if (request != null) {
+            if (userRequest.getPageNum() != null && userRequest.getPageNum() < 1) {
+                return new BaseResponse(ErrorCode.PAGE_ERROR);
+            }
+            if (userRequest.getPageSize() != null && userRequest.getPageSize() > 100) {
+                return new BaseResponse(ErrorCode.PAGE_ERROR);
+            }
+        }
+        PageResult<UserVo> result = userService.pageQueryUser(userRequest);
+        return ResultUtils.success(result);
+    }
+
+    private void isAdmin(HttpServletRequest request) {
+        if (!userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        User currentUser = (User) userObj;
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+    }
 }
+
