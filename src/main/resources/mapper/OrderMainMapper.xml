@@ -102,12 +102,10 @@
 
 <select id="getOrderCount" resultType="com.benefit.vo.OrderDashVo">
     SELECT
-        DATE(create_time) AS orderDate,
+        status   as orderStatus,
         COUNT(*) AS orderCount
     FROM t_order_main
-    WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-    GROUP BY orderDate
-    ORDER BY orderDate DESC
+    GROUP BY status
 </select>
 
 <select id="checkAndCloseExpireOrder" resultType="com.benefit.model.entity.OrderMain">
