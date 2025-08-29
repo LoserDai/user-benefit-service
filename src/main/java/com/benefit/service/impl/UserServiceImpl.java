@@ -219,9 +219,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUpdatedBy(loginUser.getAccount());
 
         //如果未激活， 就给激活
-        if(Status.INACTIVE.equals(user.getStatus())){
-            user.setStatus(Status.ACTIVE);
-        }
+//        if(Status.INACTIVE.equals(user.getStatus())){
+//            user.setStatus(Status.ACTIVE);
+//        }
         //如果当前登录的是管理员，可以更新任何用户
         if (isAdmin(loginUser)){
             return userMapper.updateById(user);
