@@ -180,7 +180,7 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
         }
 
         // 价格范围查询
-        if (request.getPrice() != null) {
+        if (request.getMinPrice() != null) {
             queryWrapper.ge("price", request.getMinPrice());
         }
         if (request.getMaxPrice() != null) {
