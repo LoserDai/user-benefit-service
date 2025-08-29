@@ -1,7 +1,9 @@
 package com.benefit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.benefit.common.PageResult;
 import com.benefit.exception.BusinessException;
 import com.benefit.mapper.BenefitPointsMapper;
 import com.benefit.mapper.PointTransactionMapper;
@@ -9,13 +11,17 @@ import com.benefit.model.entity.BenefitPoints;
 import com.benefit.model.entity.PointTransaction;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.BenefitPointsRequest;
+import com.benefit.request.PointsRequest;
 import com.benefit.service.BenefitPointsService;
+import com.benefit.vo.PointsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Allen
@@ -155,5 +161,27 @@ public class BenefitPointsServiceImpl extends ServiceImpl<BenefitPointsMapper, B
         int insert = pointTransactionMapper.insert(pointTransaction);
         log.info("save pointTransaction: {}",pointTransaction);
         return count;
+    }
+
+    @Override
+    public PageResult<PointsVo> pageQuery(PointsRequest request) {
+        int pageNum = Optional.ofNullable(request)
+                .map(PointsRequest::getPageNum)
+                .filter(num -> num > 0)
+                .orElse(1);
+
+        int pageSize = Optional.ofNullable(request)
+                .map(PointsRequest::getPageSize)
+                .filter(size -> size > 0 && size <= 500)
+                .orElse(10);
+
+        Page<PointsVo> page = new Page<>(pageNum, pageSize);
+        List<PointsVo> list = benefitPointsMapper.pageQuery(page, request);
+        return new PageResult<>(
+                list,
+                page.getTotal(),
+                (int) page.getCurrent(),
+                (int) page.getSize()
+        );
     }
 }

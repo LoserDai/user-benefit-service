@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.benefit.mapper.BenefitPointsMapper">
+
+    <select id="pageQuery" resultType="com.benefit.vo.PointsVo">
+        SELECT
+        t1.user_id,
+        t2.account,
+        t1.points,
+        t1.balance
+        FROM benefit_points t1
+        LEFT JOIN user t2 ON t1.user_id = t2.id
+        <where>
+            <if test="request.account != null and request.account != ''">
+                AND t2.account LIKE CONCAT('%', #{request.account}, '%')
+            </if>
+        </where>
+        ORDER BY t2.create_time
+    </select>
+</mapper>

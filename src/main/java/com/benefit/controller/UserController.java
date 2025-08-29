@@ -310,7 +310,7 @@ public class UserController {
     * @Return: void
     * @Author: Allen
     */
-    private void isAdmin(HttpServletRequest request) {
+    public void isAdmin(HttpServletRequest request) {
         if (!userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH);
         }

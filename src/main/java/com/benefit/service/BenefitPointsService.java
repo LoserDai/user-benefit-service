@@ -1,8 +1,11 @@
 package com.benefit.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.benefit.common.PageResult;
 import com.benefit.model.entity.BenefitPoints;
 import com.benefit.request.BenefitPointsRequest;
+import com.benefit.request.PointsRequest;
+import com.benefit.vo.PointsVo;
 
 /**
  * @author Allen
@@ -11,4 +14,6 @@ import com.benefit.request.BenefitPointsRequest;
 public interface BenefitPointsService extends IService<BenefitPoints> {
 
     int modifyBalance(BenefitPointsRequest request);
+
+    PageResult<PointsVo> pageQuery(PointsRequest request);
 }

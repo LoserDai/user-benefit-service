@@ -2,14 +2,17 @@ package com.benefit.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.benefit.common.BaseResponse;
+import com.benefit.common.PageResult;
 import com.benefit.common.ResultUtils;
 import com.benefit.exception.BusinessException;
 import com.benefit.model.entity.BenefitPoints;
 import com.benefit.model.entity.User;
 import com.benefit.model.enums.ErrorCode;
 import com.benefit.request.BenefitPointsRequest;
+import com.benefit.request.PointsRequest;
 import com.benefit.service.BenefitPointsService;
 import com.benefit.service.UserService;
+import com.benefit.vo.PointsVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -69,5 +72,10 @@ public class BenefitPointsController {
         return ResultUtils.success(points);
     }
 
-
+    @PostMapping("/pageQuery")
+    @ApiOperation("分页查询账户信息")
+    public BaseResponse<PageResult<PointsVo>> pageQuery(@RequestBody PointsRequest request) {
+        PageResult<PointsVo> result = benefitPointsService.pageQuery(request);
+        return ResultUtils.success(result);
+    }
 }
