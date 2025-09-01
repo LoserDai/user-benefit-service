@@ -17,5 +17,5 @@ public interface BenefitPackageService  extends IService<BenefitPackage> {
 
     int savePackage(BenefitPackageRequest request, MultipartFile file);
 
-    int updatePackage(BenefitPackageRequest request);
+    int updatePackage(BenefitPackageRequest request,MultipartFile file);
 }

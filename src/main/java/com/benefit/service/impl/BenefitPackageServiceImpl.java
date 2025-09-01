@@ -172,17 +172,27 @@ public class BenefitPackageServiceImpl extends ServiceImpl<BenefitPackageMapper,
     */
     @Override
     @Transactional
-    public int updatePackage(BenefitPackageRequest request) {
+    public int updatePackage(BenefitPackageRequest request,MultipartFile imageFile) {
+
+        String morePath = "benefit-packages/";
+        BenefitPackage benefitPackage = new BenefitPackage();
+        try {
+
+            benefitPackage.setRemark(request.getRemark());
+            benefitPackage.setPackageName(request.getPackageName());
+            benefitPackage.setPrice(request.getPrice());
+            benefitPackage.setStatus(request.getStatus());
+            benefitPackage.setUpdateTime(LocalDateTime.now());
+            benefitPackage.setQuantity(request.getQuantity());
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String imageUrl = imageStorageService.storeBenefitProductImage(imageFile, morePath);
+                benefitPackage.setPackageImagePath(imageUrl);
+            }
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "save packageImagePath error!");
+        }
 
         //修改benefit_package的数据
-        BenefitPackage benefitPackage = new BenefitPackage();
-
-        benefitPackage.setRemark(request.getRemark());
-        benefitPackage.setPackageName(request.getPackageName());
-        benefitPackage.setPrice(request.getPrice());
-        benefitPackage.setStatus(request.getStatus());
-        benefitPackage.setUpdateTime(LocalDateTime.now());
-        benefitPackage.setQuantity(request.getQuantity());
 
         Long isExist = benefitPackageMapper.selectCount(new QueryWrapper<BenefitPackage>().eq("id", request.getId()));
 

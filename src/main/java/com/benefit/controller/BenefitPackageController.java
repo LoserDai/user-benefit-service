@@ -78,8 +78,9 @@ public class BenefitPackageController {
      * @return
      */
     @PostMapping("/updatePackage")
-    @ApiOperation("更改权益包")
-    public BaseResponse<Integer> updatePackage(@RequestBody BenefitPackageRequest request){
+    @ApiOperation(value = "更改权益包", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BaseResponse<Integer> updatePackage(@RequestPart("request")  @Valid BenefitPackageRequest request,
+                                               @RequestParam("file") MultipartFile file){
 
         if (request == null){
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"request param is null");
@@ -93,7 +94,7 @@ public class BenefitPackageController {
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"Quantity must great than 0!");
         }
 
-        int updateCount = benefitPackageService.updatePackage(request);
+        int updateCount = benefitPackageService.updatePackage(request,file);
         if (updateCount < 0){
             return ResultUtils.error(ErrorCode.PARAMS_ERROR,"update package failed!");
         }
