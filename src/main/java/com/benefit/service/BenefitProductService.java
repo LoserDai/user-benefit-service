@@ -20,7 +20,7 @@ public interface BenefitProductService extends IService<BenefitProduct> {
 
     int deleteProduct(String productId);
 
-    BenefitProduct updateProduct(BenefitProduct product);
+    BenefitProduct updateProduct(BenefitProduct product, MultipartFile file);
 
     Integer getProductCount();
 }

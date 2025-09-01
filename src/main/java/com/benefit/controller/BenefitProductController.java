@@ -83,8 +83,9 @@ public class BenefitProductController {
     }
 
     @ApiOperation("编辑产品接口")
-    @PostMapping("/updateProduct")
-    public BaseResponse updateProduct(@RequestBody BenefitProduct product){
+    @PostMapping(value = "/updateProduct",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BaseResponse updateProduct(@RequestPart("product") BenefitProduct product,
+                                      @RequestParam("file") MultipartFile file){
         if (StringUtils.isBlank(product.getId().toString())){
             return new BaseResponse(ErrorCode.PARAMS_ERROR);
         }
@@ -93,7 +94,7 @@ public class BenefitProductController {
             log.info("product is not exist!");
             return ResultUtils.error(ErrorCode.PARAMS_ERROR);
         }
-        product = benefitProductService.updateProduct(product);
+        product = benefitProductService.updateProduct(product, file);
 
         return ResultUtils.success(product);
     }

@@ -141,19 +141,31 @@ public class BenefitProductServiceImpl extends ServiceImpl<BenefitProductMapper,
     }
 
     @Override
-    public BenefitProduct updateProduct(BenefitProduct product) {
+    public BenefitProduct updateProduct(BenefitProduct product, MultipartFile imageFile) {
+
+        try {
+            String morePath = "benefit-products/";
+            if (imageFile != null && !imageFile.isEmpty()) {
+
+                String imageUrl = imageStorageService.storeBenefitProductImage(imageFile, morePath);
+                product.setProductImagePath(imageUrl);
+            }
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+        }
+
         BenefitProduct existingProduct = productMapper.selectById(product.getId());
-         if (ObjectUtils.isNull(existingProduct)){
-             log.info("Not exist this product!");
-             return null;
-         }
-         product.setUpdateTime(LocalDateTime.now());
+        if (ObjectUtils.isNull(existingProduct)) {
+            log.info("Not exist this product!");
+            return null;
+        }
+        product.setUpdateTime(LocalDateTime.now());
         int row = productMapper.updateById(product);
-         if (row <= 0){
-             log.info("update product failed!");
-             return null;
-         }
-            return product;
+        if (row <= 0) {
+            log.info("update product failed!");
+            return null;
+        }
+        return product;
     }
 
     @Override
